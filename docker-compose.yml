@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+  api:
+    image: vibioh/spurf
+    - -enedisEmail
+    - "${ENEDIS_EMAIL}"
+    - -enedisPassword
+    - "${ENEDIS_PASSWORD}"
+    - -dbHost
+    - "${SPURF_DATABASE_HOST}"
+    - -dbName
+    - "${SPURF_DATABASE_NAME}"
+    - -dbPass
+    - "${SPURF_DATABASE_PASS}"
+    - -dbUser
+    - "${SPURF_DATABASE_USER}"
+    - -tracingAgent
+    - monitoring_jaeger:6831
+    - -tracingName
+    - spurf
+    labels:
+      traefik.enable: 'false'
+    restart: on-failure:5
+    read_only: true
+    cpu_shares: 128
+    mem_limit: 25165824
+    security_opt:
+    - no-new-privileges
+
+networks:
+  default:
+    external:
+      name: traefik

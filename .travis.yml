@@ -1,0 +1,51 @@
+jobs:
+  include:
+  - stage: Build
+
+    sudo: required
+    services:
+    - docker
+    script: docker build --build-arg CODECOV_TOKEN  --build-arg "APP_VERSION=$(make version)" -t "vibioh/$(make name):$(make version)" .
+    after_success:
+    - echo "${DOCKER_PASS}" | docker login -u vibioh --password-stdin
+    - docker push "vibioh/$(make name):$(make version)"
+
+  - stage: Publish
+
+    sudo: required
+    services:
+    - docker
+    script:
+    - echo "${DOCKER_PASS}" | docker login -u vibioh --password-stdin
+    - docker pull "vibioh/$(make name):$(make version)"
+    - docker tag "vibioh/$(make name):$(make version)" "vibioh/$(make name):latest"
+    - docker push "vibioh/$(make name):latest"
+    after_success:
+    - curl -s -X POST https://goreportcard.com/checks?repo=github.com/ViBiOh/spurf
+
+  - stage: Deploy
+
+    script: |
+     sed \
+        -e "s|\${ENEDIS_EMAIL}|${ENEDIS_EMAIL}|g" \
+        -e "s/\${ENEDIS_PASSWORD}/${ENEDIS_PASSWORD}/g" \
+        -e "s/\${SPURF_DATABASE_HOST}/${SPURF_DATABASE_HOST}/g" \
+        -e "s/\${SPURF_DATABASE_NAME}/${SPURF_DATABASE_NAME}/g" \
+        -e "s/\${SPURF_DATABASE_PASS}/${SPURF_DATABASE_PASS}/g" \
+        -e "s/\${SPURF_DATABASE_USER}/${SPURF_DATABASE_USER}/g" \
+        -e "s|\\\$|\$\$|g" \
+        docker-compose.yml > docker-compose-env.yml
+    deploy:
+      provider: script
+      skip_cleanup: true
+      script: bash script/deploy "$(make name)" "$(make version)" "@docker-compose.yml"
+
+stages:
+  - Build
+  - name: Publish
+    if: branch = master
+  - name: Deploy
+    if: branch = master
+
+notifications:
+  email: false
