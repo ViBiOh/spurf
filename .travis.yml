@@ -38,7 +38,7 @@ jobs:
     deploy:
       provider: script
       skip_cleanup: true
-      script: bash script/deploy "$(make name)" "$(make version)" "@docker-compose.yml"
+      script: bash script/deploy "$(make name)" "$(make version)" "@docker-compose-env.yml"
 
 stages:
   - Build
