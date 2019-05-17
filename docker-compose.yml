@@ -3,6 +3,7 @@ version: '2'
 services:
   api:
     image: vibioh/spurf
+    command:
     - -enedisEmail
     - "${ENEDIS_EMAIL}"
     - -enedisPassword
