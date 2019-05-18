@@ -12,7 +12,7 @@ ifeq ($(DEBUG), true)
 	APP_STARTER = dlv debug $(APP_MAIN) --
 endif
 
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := app
 
 ## help: Display list of commands
 .PHONY: help
@@ -39,9 +39,9 @@ version:
 author:
 	@python -c 'import sys; import urllib; sys.stdout.write(urllib.quote_plus(sys.argv[1]))' "$(shell git log --pretty=format:'%an' -n 1)"
 
-## all: Build app with dependencies download
-.PHONY: all
-all: deps go
+## app: Build app with dependencies download
+.PHONY: app
+app: deps go
 
 ## go: Build app
 .PHONY: go

@@ -7,8 +7,8 @@ import (
 	"github.com/ViBiOh/httputils/pkg/db"
 	"github.com/ViBiOh/httputils/pkg/logger"
 	"github.com/ViBiOh/httputils/pkg/opentracing"
+	"github.com/ViBiOh/httputils/pkg/scheduler"
 	"github.com/ViBiOh/spurf/pkg/enedis"
-	"github.com/ViBiOh/spurf/pkg/scheduler"
 )
 
 func main() {
