@@ -11,8 +11,8 @@ import (
 	"github.com/ViBiOh/httputils/pkg/db"
 	"github.com/ViBiOh/httputils/pkg/errors"
 	"github.com/ViBiOh/httputils/pkg/logger"
+	"github.com/ViBiOh/httputils/pkg/scheduler"
 	"github.com/ViBiOh/httputils/pkg/tools"
-	"github.com/ViBiOh/spurf/pkg/scheduler"
 )
 
 const (
