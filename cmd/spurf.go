@@ -6,6 +6,7 @@ import (
 
 	"github.com/ViBiOh/httputils/pkg/db"
 	"github.com/ViBiOh/httputils/pkg/logger"
+	"github.com/ViBiOh/httputils/pkg/opentracing"
 	"github.com/ViBiOh/spurf/pkg/enedis"
 	"github.com/ViBiOh/spurf/pkg/scheduler"
 )
@@ -15,6 +16,7 @@ func main() {
 
 	check := fs.Bool("c", false, "Healthcheck (check and exit)")
 
+	opentracingConfig := opentracing.Flags(fs, "tracing")
 	dbConfig := db.Flags(fs, "db")
 	schedulerConfig := scheduler.Flags(fs, "scheduler")
 	enedisConfig := enedis.Flags(fs, "enedis")
@@ -26,6 +28,8 @@ func main() {
 	if *check {
 		return
 	}
+
+	opentracing.New(opentracingConfig)
 
 	spurfDb, err := db.New(dbConfig)
 	if err != nil {
