@@ -19,6 +19,10 @@ const (
 
 // Login triggers login
 func (a *App) Login() error {
+	if a.email == "" || a.password == "" {
+		return errors.New("no credentials provided")
+	}
+
 	values := url.Values{}
 	values.Add("IDToken1", a.email)
 	values.Add("IDToken2", a.password)

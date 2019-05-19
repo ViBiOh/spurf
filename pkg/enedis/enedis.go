@@ -72,10 +72,6 @@ func New(config Config, db *sql.DB) (*App, error) {
 
 // Start the package
 func (a *App) Start() error {
-	if err := a.Login(); err != nil {
-		return err
-	}
-
 	lastTimestamp, err := a.getLastFetch()
 	if err != nil {
 		return err
@@ -98,6 +94,10 @@ func (a *App) Start() error {
 
 // Do enedis fetch
 func (a *App) Do(ctx context.Context, currentTime time.Time) (err error) {
+	if err := a.Login(); err != nil {
+		return err
+	}
+
 	var data *Consumption
 
 	data, err = a.GetData(ctx, currentTime.Format(frenchDateFormat), true)
