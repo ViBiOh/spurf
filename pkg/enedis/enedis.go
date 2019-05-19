@@ -94,8 +94,8 @@ func (a *App) Start() error {
 
 // Do enedis fetch
 func (a *App) Do(ctx context.Context, currentTime time.Time) (err error) {
-	if err := a.Login(); err != nil {
-		return err
+	if err = a.Login(); err != nil {
+		return
 	}
 
 	var data *Consumption

@@ -106,6 +106,10 @@ func (a *App) GetData(ctx context.Context, startDate string, first bool) (*Consu
 		return nil, errors.WithStack(err)
 	}
 
+	if response.Etat != nil && response.Etat.Valeur == "erreur" {
+		return nil, errors.New("API error: %s", response.Etat.ErreurText)
+	}
+
 	for _, value := range response.Graphe.Data {
 		value.Timestamp = startTime.Add(time.Duration(30*(value.Ordre-1)) * time.Minute).Unix()
 	}
