@@ -72,18 +72,26 @@ func New(config Config, db *sql.DB) (*App, error) {
 
 // Start the package
 func (a *App) Start() error {
+	return a.Do(context.Background(), time.Now().In(a.location))
+}
+
+// Do enedis fetch
+func (a *App) Do(ctx context.Context, currentTime time.Time) error {
+	if err := a.Login(); err != nil {
+		return err
+	}
+
 	lastTimestamp, err := a.getLastFetch()
 	if err != nil {
 		return err
 	}
 
-	currentTime := time.Now()
-	lastSync := lastTimestamp.In(a.location).Add(time.Hour * 24)
+	lastSync := lastTimestamp.In(a.location).Truncate(oneDay).Add(oneDay)
 
 	for lastSync.Before(currentTime) {
 		logger.Info("Fetching data for %s", lastSync.Format(frenchDateFormat))
-		if err := a.Do(context.Background(), lastSync); err != nil {
-			logger.Error("%+v", err)
+		if err := a.fetchAndSave(context.Background(), lastSync); err != nil {
+			return err
 		}
 
 		lastSync = lastSync.Add(time.Hour * 24)
@@ -92,12 +100,7 @@ func (a *App) Start() error {
 	return nil
 }
 
-// Do enedis fetch
-func (a *App) Do(ctx context.Context, currentTime time.Time) (err error) {
-	if err = a.Login(); err != nil {
-		return
-	}
-
+func (a *App) fetchAndSave(ctx context.Context, currentTime time.Time) (err error) {
 	var data *Consumption
 
 	data, err = a.GetData(ctx, currentTime.Format(frenchDateFormat), true)
