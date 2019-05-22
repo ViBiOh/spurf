@@ -28,6 +28,8 @@ Usage of spurf:
         [scheduler] Hour of running (default 8)
   -schedulerInterval string
         [scheduler] Duration between two runs (default "24h")
+  -schedulerMaxRetry int
+        [scheduler] Max retry (default 10)
   -schedulerMinute int
         [scheduler] Minute of running
   -schedulerRetry string
