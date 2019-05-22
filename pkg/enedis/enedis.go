@@ -94,7 +94,7 @@ func (a *App) Do(ctx context.Context, currentTime time.Time) error {
 			return err
 		}
 
-		lastSync = lastSync.Add(time.Hour * 24)
+		lastSync = lastSync.Add(oneDay)
 	}
 
 	return nil
