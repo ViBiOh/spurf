@@ -47,7 +47,7 @@ func main() {
 	}
 
 	if err := enedisApp.Start(); err != nil {
-		logger.Fatal("%+v", err)
+		logger.Error("%+v", err)
 	}
 
 	scheduler.Start()
