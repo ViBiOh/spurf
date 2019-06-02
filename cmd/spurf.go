@@ -22,7 +22,7 @@ func main() {
 	enedisConfig := enedis.Flags(fs, "enedis")
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
-		logger.Fatal("%+v", err)
+		logger.Fatal("%#v", err)
 	}
 
 	if *check {
@@ -33,21 +33,21 @@ func main() {
 
 	spurfDb, err := db.New(dbConfig)
 	if err != nil {
-		logger.Fatal("%+v", err)
+		logger.Fatal("%#v", err)
 	}
 
 	enedisApp, err := enedis.New(enedisConfig, spurfDb)
 	if err != nil {
-		logger.Fatal("%+v", err)
+		logger.Fatal("%#v", err)
 	}
 
 	scheduler, err := scheduler.New(schedulerConfig, enedisApp)
 	if err != nil {
-		logger.Fatal("%+v", err)
+		logger.Fatal("%#v", err)
 	}
 
 	if err := enedisApp.Start(); err != nil {
-		logger.Error("%+v", err)
+		logger.Error("%#v", err)
 	}
 
 	scheduler.Start()

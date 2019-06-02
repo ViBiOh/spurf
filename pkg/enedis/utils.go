@@ -19,7 +19,7 @@ func (a *App) appendSessionCookie(headers http.Header) {
 
 func safeWrite(w *strings.Builder, content string) {
 	if _, err := w.WriteString(content); err != nil {
-		logger.Error("%+v", errors.WithStack(err))
+		logger.Error("%#v", errors.WithStack(err))
 	}
 }
 
