@@ -62,9 +62,16 @@ func New(config Config, db *sql.DB) (*App, error) {
 		return nil, errors.WithStack(err)
 	}
 
+	email := strings.TrimSpace(*config.email)
+	password := strings.TrimSpace(*config.password)
+
+	if email == "" || password == "" {
+		return nil, errors.New("no credentials provided")
+	}
+
 	return &App{
-		email:    strings.TrimSpace(*config.email),
-		password: strings.TrimSpace(*config.password),
+		email:    email,
+		password: password,
 		location: location,
 		db:       db,
 	}, nil
@@ -82,7 +89,9 @@ func (a *App) Do(ctx context.Context, currentTime time.Time) error {
 	}
 
 	lastTimestamp, err := a.getLastFetch()
-	if err != nil {
+	if err == sql.ErrNoRows {
+		return nil
+	} else if err != nil {
 		return err
 	}
 
