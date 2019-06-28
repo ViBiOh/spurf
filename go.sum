@@ -1,7 +1,7 @@
 github.com/NYTimes/gziphandler v1.1.1 h1:ZUDjpQae29j0ryrS0u/B8HZfJBtBQHjqw2rQ2cqUQ3I=
 github.com/NYTimes/gziphandler v1.1.1/go.mod h1:n/CVRwUEOgIxrgPvAQhUUr9oeUtvrhMomdKFjzJNB0c=
-github.com/ViBiOh/httputils v0.0.0-20190621171825-1354e2e281a8 h1:WNJBgEhwx6x9nIVBuviPYH254u3AOLAO5lMvyeJvF1U=
-github.com/ViBiOh/httputils v0.0.0-20190621171825-1354e2e281a8/go.mod h1:dmRBc4Gyaj+IKLbrUN6qYNi4a8jyLjZfRipPs7M7g08=
+github.com/ViBiOh/httputils v0.0.0-20190627205713-52ada102efaf h1:xRlNwXoqCOcIY+N0m19sNWpX8Yk9DlNgoFQedpeoVT0=
+github.com/ViBiOh/httputils v0.0.0-20190627205713-52ada102efaf/go.mod h1:dmRBc4Gyaj+IKLbrUN6qYNi4a8jyLjZfRipPs7M7g08=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
