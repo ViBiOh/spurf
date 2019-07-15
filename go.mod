@@ -2,4 +2,4 @@ module github.com/ViBiOh/spurf
 
 go 1.12
 
-require github.com/ViBiOh/httputils v0.0.0-20190629090518-e8661bee8266
+require github.com/ViBiOh/httputils v0.0.0-20190715113052-e9710447ed56
