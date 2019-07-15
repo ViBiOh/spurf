@@ -17,7 +17,7 @@ services:
     - -dbUser
     - "${SPURF_DATABASE_USER}"
     - -tracingAgent
-    - monitoring_jaeger:6831
+    - monitoring_jaeger_1:6831
     - -tracingName
     - spurf
     labels:
