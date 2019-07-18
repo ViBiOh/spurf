@@ -10,6 +10,17 @@ jobs:
     - echo "${DOCKER_PASS}" | docker login -u vibioh --password-stdin
     - docker push "vibioh/$(make name):$(make version)"
 
+  - stage: Release
+
+    language: go
+    go: 1.12
+    env:
+      - GO111MODULE=on
+      - GITHUB_REPOSITORY=ViBiOh/spurf
+      - GIT_TAG=${TRAVIS_TAG}
+      - RELEASE_NAME=${TRAVIS_TAG}
+    script: ./script/release
+
   - stage: Publish
 
     sudo: required
