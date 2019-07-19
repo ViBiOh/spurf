@@ -3,20 +3,23 @@
 set -o nounset -o pipefail -o errexit
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+readonly OUTPUT_TXT="coverage.txt"
+readonly COVER_OUTPUT="profile.out"
+
 pushd "${SCRIPT_DIR}/../"
 
 MODE="mode: atomic"
-echo "${MODE}" > coverage.txt
+echo "${MODE}" > "${OUTPUT_TXT}"
 
 for pkg in $(go list "${PACKAGES:-./...}"); do
-  go test -race -covermode=atomic -coverprofile=profile.out "${pkg}"
+  go test -race -covermode=atomic -coverprofile=${COVER_OUTPUT} "${pkg}"
 
-  if [[ -f "profile.out" ]]; then
-    cat profile.out | grep -v "${MODE}" >> coverage.txt || true
-    rm profile.out
+  if [[ -f "${COVER_OUTPUT}" ]]; then
+    cat "${COVER_OUTPUT}" | grep -v "${MODE}" >> "${OUTPUT_TXT}" || true
+    rm "${COVER_OUTPUT}"
   fi
 done
 
-go tool cover -func=coverage.txt
+go tool cover -func="${OUTPUT_TXT}"
 
 popd

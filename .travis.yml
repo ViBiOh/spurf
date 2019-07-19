@@ -53,6 +53,8 @@ jobs:
 
 stages:
   - Build
+  - name: Release
+    if: tag =~ /^v\d+\.\d+\.\d+$/
   - name: Publish
     if: branch = master
   - name: Deploy

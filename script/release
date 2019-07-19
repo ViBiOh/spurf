@@ -5,6 +5,7 @@ readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 readonly OUTPUT_DIR="${SCRIPT_DIR}/../release"
 readonly TARGETS=('darwin/amd64' 'linux/amd64' 'linux/arm' 'linux/arm64')
+readonly OUTPUT_TXT="output.txt"
 
 rm -rf "${OUTPUT_DIR}"
 mkdir "${OUTPUT_DIR}"
@@ -57,7 +58,7 @@ release() {
     -H "Content-Type: application/json" \
     -H "Authorization: token ${GITHUB_OAUTH_TOKEN}" \
     -X POST \
-    -o create.txt \
+    -o "${OUTPUT_TXT}" \
     -w "%{http_code}" \
     "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases" \
     -d "{
@@ -68,12 +69,12 @@ release() {
 
   if [[ "${HTTP_STATUS}" != "201" ]]; then
      echo -e "${RED}Failed to create Release${RESET}"
-     cat create.txt
+     cat "${OUTPUT_TXT}"
      exit 1
   fi
 
-  local response_url=$(python -c 'import json; data = json.load(open("create.txt")); print(data["upload_url"])' | sed 's|{.*||')
-  rm -rf create.txt
+  local response_url=$(python -c "import json; data = json.load(open(\"${OUTPUT_TXT}\")); print(data[\"upload_url\"]);" | sed 's|{.*||')
+  rm -rf "${OUTPUT_TXT}"
 
   for asset in "${OUTPUT_DIR}"/*; do
     echo -e "${BLUE}Uploading asset ${asset}...${RESET}"
@@ -83,19 +84,19 @@ release() {
       -H "Content-Type: application/x-executable" \
       -H "Authorization: token ${GITHUB_OAUTH_TOKEN}" \
       -X POST \
-      -o upload.txt \
+      -o "${OUTPUT_TXT}" \
       -w "%{http_code}" \
       "${response_url}?name=$(basename ${asset})" \
       --data-binary "@${asset}")
 
     if [[ "${HTTP_STATUS}" != "201" ]]; then
        echo -e "${RED}Failed to upload asset ${asset}${RESET}"
-       cat upload.txt
+       cat "${OUTPUT_TXT}"
        exit 1
     fi
   done
 
-  rm -rf upload.txt
+  rm -rf "${OUTPUT_TXT}"
 
   echo -e "${GREEN}Done!${RESET}"
 }

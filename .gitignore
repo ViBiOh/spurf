@@ -1,6 +1,5 @@
 # Golang
 bin/
 release/
-create.txt
-update.txt
+output.txt
 coverage.txt
