@@ -1,5 +1,10 @@
 SHELL = /bin/sh
 
+ifneq ("$(wildcard .env)","")
+	include .env
+	export
+endif
+
 APP_NAME = spurf
 PACKAGES ?= ./...
 GO_FILES ?= */*.go */*/*.go
@@ -20,25 +25,15 @@ endif
 help: Makefile
 	@sed -n 's|^##||p' $< | column -t -s ':' | sed -e 's|^| |'
 
-## name: Output name
+## name: Output app name
 .PHONY: name
 name:
 	@echo -n $(APP_NAME)
 
-## dist: Output binary path
-.PHONY: dist
-dist:
-	@echo -n $(BINARY_PATH)
-
-## version: Output sha1 of last commit
+## version: Output last commit sha1
 .PHONY: version
 version:
 	@echo -n $(shell git rev-parse --short HEAD)
-
-## author: Output author's name of last commit
-.PHONY: author
-author:
-	@python -c 'import sys; import urllib; sys.stdout.write(urllib.quote_plus(sys.argv[1]))' "$(shell git log --pretty=format:'%an' -n 1)"
 
 ## app: Build app with dependencies download
 .PHONY: app
@@ -55,30 +50,30 @@ deps:
 	go get golang.org/x/lint/golint
 	go get golang.org/x/tools/cmd/goimports
 
-## format: Format code
+## format: Format code of app
 .PHONY: format
 format:
 	goimports -w $(GO_FILES)
 	gofmt -s -w $(GO_FILES)
 
-## lint: Lint code
+## lint: Lint code of app
 .PHONY: lint
 lint:
 	golint $(PACKAGES)
 	errcheck -ignoretests $(PACKAGES)
 	go vet $(PACKAGES)
 
-## test: Test with coverage
-.PHONY: test 
+## test: Test code of app with coverage
+.PHONY: test
 test:
 	script/coverage
 
-## bench: Benchmark code
+## bench: Benchmark code of app
 .PHONY: bench
 bench:
 	go test $(PACKAGES) -bench . -benchmem -run Benchmark.*
 
-## build: Build binary
+## build: Build binary of app
 .PHONY: build
 build:
 	CGO_ENABLED=0 go build -ldflags="-s -w" -installsuffix nocgo -o $(BINARY_PATH) $(APP_MAIN)
