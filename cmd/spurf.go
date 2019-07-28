@@ -21,9 +21,7 @@ func main() {
 	schedulerConfig := scheduler.Flags(fs, "scheduler")
 	enedisConfig := enedis.Flags(fs, "enedis")
 
-	if err := fs.Parse(os.Args[1:]); err != nil {
-		logger.Fatal("%#v", err)
-	}
+	logger.Fatal(fs.Parse(os.Args[1:]))
 
 	if *check {
 		return
@@ -32,19 +30,13 @@ func main() {
 	opentracing.New(opentracingConfig)
 
 	spurfDb, err := db.New(dbConfig)
-	if err != nil {
-		logger.Fatal("%#v", err)
-	}
+	logger.Fatal(err)
 
 	enedisApp, err := enedis.New(enedisConfig, spurfDb)
-	if err != nil {
-		logger.Fatal("%#v", err)
-	}
+	logger.Fatal(err)
 
 	scheduler, err := scheduler.New(schedulerConfig, enedisApp)
-	if err != nil {
-		logger.Fatal("%#v", err)
-	}
+	logger.Fatal(err)
 
 	if err := enedisApp.Start(); err != nil {
 		logger.Error("%#v", err)
