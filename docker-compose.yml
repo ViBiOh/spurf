@@ -16,10 +16,6 @@ services:
     - "${SPURF_DATABASE_PASS}"
     - -dbUser
     - "${SPURF_DATABASE_USER}"
-    - -tracingAgent
-    - monitoring_jaeger_1:6831
-    - -tracingName
-    - spurf
     labels:
       traefik.enable: 'false'
     restart: on-failure:5
