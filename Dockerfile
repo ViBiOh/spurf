@@ -13,7 +13,6 @@ RUN curl -s https://codecov.io/bash | bash
 FROM scratch
 
 ENV ZONEINFO zoneinfo.zip
-EXPOSE 1080
 
 HEALTHCHECK --retries=10 CMD [ "/spurf", "-c" ]
 ENTRYPOINT [ "/spurf" ]
