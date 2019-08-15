@@ -20,6 +20,7 @@ const (
 	consumeURL = "https://espace-client-particuliers.enedis.fr/group/espace-particuliers/suivi-de-consommation?"
 
 	frenchDateFormat = "02/01/2006"
+	isoDateFormat    = "2006-01-02"
 )
 
 var _ scheduler.Task = &App{}
@@ -95,11 +96,14 @@ func (a *App) Do(ctx context.Context, currentTime time.Time) error {
 		return err
 	}
 
+	currentDate := currentTime.Format(isoDateFormat)
 	lastSync := lastTimestamp.In(a.location).Truncate(oneDay).Add(oneDay)
 
-	for lastSync.Before(currentTime) {
-		logger.Info("Fetching data for %s", lastSync.Format(frenchDateFormat))
-		if err := a.fetchAndSave(context.Background(), lastSync); err != nil {
+	for lastSync.Format(isoDateFormat) != currentDate {
+		lastSyncFrench := lastSync.Format(frenchDateFormat)
+
+		logger.Info("Fetching data for %s", lastSyncFrench)
+		if err := a.fetchAndSave(context.Background(), lastSyncFrench); err != nil {
 			return err
 		}
 
@@ -109,10 +113,10 @@ func (a *App) Do(ctx context.Context, currentTime time.Time) error {
 	return nil
 }
 
-func (a *App) fetchAndSave(ctx context.Context, currentTime time.Time) (err error) {
+func (a *App) fetchAndSave(ctx context.Context, date string) (err error) {
 	var data *Consumption
 
-	data, err = a.GetData(ctx, currentTime.Format(frenchDateFormat), true)
+	data, err = a.GetData(ctx, date, true)
 	if err != nil {
 		return
 	}
