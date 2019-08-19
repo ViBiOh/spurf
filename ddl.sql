@@ -1,6 +1,5 @@
 -- clean
 DROP TABLE IF EXISTS enedis_value;
-
 DROP INDEX IF EXISTS enedis_value_ts;
 
 -- enedis_value
