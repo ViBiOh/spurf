@@ -4,15 +4,14 @@ import (
 	"context"
 	"database/sql"
 	"flag"
-	"fmt"
 	"strings"
 	"time"
 
-	"github.com/ViBiOh/httputils/pkg/db"
-	"github.com/ViBiOh/httputils/pkg/errors"
-	"github.com/ViBiOh/httputils/pkg/logger"
-	"github.com/ViBiOh/httputils/pkg/scheduler"
-	"github.com/ViBiOh/httputils/pkg/tools"
+	"github.com/ViBiOh/httputils/v2/pkg/db"
+	"github.com/ViBiOh/httputils/v2/pkg/errors"
+	"github.com/ViBiOh/httputils/v2/pkg/logger"
+	"github.com/ViBiOh/httputils/v2/pkg/scheduler"
+	"github.com/ViBiOh/httputils/v2/pkg/tools"
 )
 
 const (
@@ -44,15 +43,10 @@ type App struct {
 
 // Flags adds flags for configuring package
 func Flags(fs *flag.FlagSet, prefix string) Config {
-	docPrefix := prefix
-	if prefix == "" {
-		docPrefix = "enedis"
-	}
-
 	return Config{
-		email:    fs.String(tools.ToCamel(fmt.Sprintf("%sEmail", prefix)), "", fmt.Sprintf("[%s]  Email", docPrefix)),
-		password: fs.String(tools.ToCamel(fmt.Sprintf("%sPassword", prefix)), "", fmt.Sprintf("[%s]  Password", docPrefix)),
-		timezone: fs.String(tools.ToCamel(fmt.Sprintf("%sTimezone", prefix)), "Europe/Paris", fmt.Sprintf("[%s] Timezone", docPrefix)),
+		email:    tools.NewFlag(prefix, "enedis").Name("Email").Default("").Label("Email").ToString(fs),
+		password: tools.NewFlag(prefix, "enedis").Name("Password").Default("").Label("Password").ToString(fs),
+		timezone: tools.NewFlag(prefix, "enedis").Name("Timezone").Default("Europe/Paris").Label("Timezone").ToString(fs),
 	}
 }
 
