@@ -9,35 +9,37 @@
 Usage of spurf:
   -c    Healthcheck (check and exit)
   -dbHost string
-        [db] Host
+        [db] Host {SPURF_DB_HOST}
   -dbName string
-        [db] Name
+        [db] Name {SPURF_DB_NAME}
   -dbPass string
-        [db] Pass
+        [db] Pass {SPURF_DB_PASS}
   -dbPort string
-        [db] Port (default "5432")
+        [db] Port {SPURF_DB_PORT} (default "5432")
   -dbUser string
-        [db] User
+        [db] User {SPURF_DB_USER}
   -enedisEmail string
-        [enedis]  Email
+        [enedis] Email {SPURF_ENEDIS_EMAIL}
   -enedisPassword string
-        [enedis]  Password
+        [enedis] Password {SPURF_ENEDIS_PASSWORD}
   -enedisTimezone string
-        [enedis] Timezone (default "Europe/Paris")
+        [enedis] Timezone {SPURF_ENEDIS_TIMEZONE} (default "Europe/Paris")
   -schedulerHour int
-        [scheduler] Hour of running (default 8)
+        [scheduler] Hour of running {SPURF_SCHEDULER_HOUR} (default 8)
   -schedulerInterval string
-        [scheduler] Duration between two runs (default "24h")
+        [scheduler] Duration between two runs {SPURF_SCHEDULER_INTERVAL} (default "24h")
   -schedulerMaxRetry int
-        [scheduler] Max retry (default 10)
+        [scheduler] Max retry {SPURF_SCHEDULER_MAX_RETRY} (default 10)
   -schedulerMinute int
-        [scheduler] Minute of running
+        [scheduler] Minute of running {SPURF_SCHEDULER_MINUTE}
+  -schedulerOnStart
+        [scheduler] Start scheduler on start {SPURF_SCHEDULER_ON_START}
   -schedulerRetry string
-        [scheduler] Duration between two retries (default "10m")
+        [scheduler] Duration between two retries {SPURF_SCHEDULER_RETRY} (default "10m")
   -schedulerTimezone string
-        [scheduler] Timezone of running (default "Europe/Paris")
+        [scheduler] Timezone of running {SPURF_SCHEDULER_TIMEZONE} (default "Europe/Paris")
   -tracingAgent string
-        [tracing] Jaeger Agent (e.g. host:port) (default "jaeger:6831")
+        [tracing] Jaeger Agent (e.g. host:port) {SPURF_TRACING_AGENT} (default "jaeger:6831")
   -tracingName string
-        [tracing] Service name
+        [tracing] Service name {SPURF_TRACING_NAME}
 ```
