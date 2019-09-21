@@ -3,21 +3,15 @@ version: '2'
 services:
   api:
     image: vibioh/spurf
-    command:
-    - -enedisEmail
-    - "${ENEDIS_EMAIL}"
-    - -enedisPassword
-    - "${ENEDIS_PASSWORD}"
-    - -dbHost
-    - "${SPURF_DATABASE_HOST}"
-    - -dbName
-    - "${SPURF_DATABASE_NAME}"
-    - -dbPass
-    - "${SPURF_DATABASE_PASS}"
-    - -dbUser
-    - "${SPURF_DATABASE_USER}"
     labels:
       traefik.enable: 'false'
+    environment:
+      SPURF_ENEDIS_EMAIL: ${ENEDIS_EMAIL}
+      SPURF_ENEDIS_PASSWORD: ${ENEDIS_PASSWORD}
+      SPURF_DB_HOST: ${SPURF_DATABASE_HOST}
+      SPURF_DB_NAME: ${SPURF_DATABASE_NAME}
+      SPURF_DB_USER: ${SPURF_DATABASE_USER}
+      SPURF_DB_PASS: ${SPURF_DATABASE_PASS}
     restart: on-failure:5
     read_only: true
     cpu_shares: 128
