@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ViBiOh/spurf.svg?branch=master)](https://travis-ci.org/ViBiOh/spurf)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ViBiOh/spurf)](https://goreportcard.com/report/github.com/ViBiOh/spurf)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=ViBiOh/spurf)](https://dependabot.com)
 
 ## Usage
 
