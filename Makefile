@@ -9,8 +9,8 @@ APP_NAME = spurf
 PACKAGES ?= ./...
 GO_FILES ?= */*.go */*/*.go
 
-GOBIN=bin
-BINARY_PATH=$(GOBIN)/$(APP_NAME)
+OUTPUR_DIR=bin
+BINARY_PATH=$(OUTPUR_DIR)/$(APP_NAME)
 
 APP_MAIN = cmd/spurf.go
 APP_STARTER = go run $(APP_MAIN)
