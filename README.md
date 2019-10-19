@@ -29,7 +29,7 @@ Usage of spurf:
         [scheduler] Hour of running {SPURF_SCHEDULER_HOUR} (default 8)
   -schedulerInterval string
         [scheduler] Duration between two runs {SPURF_SCHEDULER_INTERVAL} (default "24h")
-  -schedulerMaxRetry int
+  -schedulerMaxRetry uint
         [scheduler] Max retry {SPURF_SCHEDULER_MAX_RETRY} (default 10)
   -schedulerMinute int
         [scheduler] Minute of running {SPURF_SCHEDULER_MINUTE}

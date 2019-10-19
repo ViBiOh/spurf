@@ -34,11 +34,30 @@ jobs:
     after_success:
     - curl -q -sS -X POST https://goreportcard.com/checks?repo=github.com/ViBiOh/spurf
 
+  - stage: Deploy
+
+    script: |
+     sed \
+        -e "s|\${ENEDIS_EMAIL}|${ENEDIS_EMAIL}|g" \
+        -e "s|\${ENEDIS_PASSWORD}|${ENEDIS_PASSWORD}|g" \
+        -e "s|\${SPURF_DATABASE_HOST}|${SPURF_DATABASE_HOST}|g" \
+        -e "s|\${SPURF_DATABASE_NAME}|${SPURF_DATABASE_NAME}|g" \
+        -e "s|\${SPURF_DATABASE_USER}|${SPURF_DATABASE_USER}|g" \
+        -e "s|\${SPURF_DATABASE_PASS}|${SPURF_DATABASE_PASS}|g" \
+        -e "s|\\\$|\$\$|g" \
+        docker-compose.yml > docker-compose-env.yml
+    deploy:
+      provider: script
+      skip_cleanup: true
+      script: bash script/deploy "$(make name)" "@docker-compose-env.yml"
+
 stages:
   - Build
   - name: Release
     if: tag =~ /^v\d+\.\d+\.\d+$/
   - name: Publish
+    if: branch = master && type = push
+  - name: Deploy
     if: branch = master && type = push
 
 notifications:
