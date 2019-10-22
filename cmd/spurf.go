@@ -4,10 +4,10 @@ import (
 	"flag"
 	"os"
 
+	"github.com/ViBiOh/httputils/v2/pkg/cron"
 	"github.com/ViBiOh/httputils/v2/pkg/db"
 	"github.com/ViBiOh/httputils/v2/pkg/logger"
 	"github.com/ViBiOh/httputils/v2/pkg/opentracing"
-	"github.com/ViBiOh/httputils/v2/pkg/scheduler"
 	"github.com/ViBiOh/spurf/pkg/enedis"
 )
 
@@ -18,7 +18,6 @@ func main() {
 
 	opentracingConfig := opentracing.Flags(fs, "tracing")
 	dbConfig := db.Flags(fs, "db")
-	schedulerConfig := scheduler.Flags(fs, "scheduler")
 	enedisConfig := enedis.Flags(fs, "enedis")
 
 	logger.Fatal(fs.Parse(os.Args[1:]))
@@ -35,12 +34,11 @@ func main() {
 	enedisApp, err := enedis.New(enedisConfig, spurfDb)
 	logger.Fatal(err)
 
-	scheduler, err := scheduler.New(schedulerConfig, enedisApp)
-	logger.Fatal(err)
-
 	if err := enedisApp.Start(); err != nil {
 		logger.Error("%#v", err)
 	}
 
-	scheduler.Start()
+	cron.NewCron().Days().At("08:00").Start(enedisApp.Do, func(err error) {
+		logger.Error("%+v", err)
+	})
 }

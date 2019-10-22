@@ -25,20 +25,6 @@ Usage of spurf:
         [enedis] Password {SPURF_ENEDIS_PASSWORD}
   -enedisTimezone string
         [enedis] Timezone {SPURF_ENEDIS_TIMEZONE} (default "Europe/Paris")
-  -schedulerHour int
-        [scheduler] Hour of running {SPURF_SCHEDULER_HOUR} (default 8)
-  -schedulerInterval string
-        [scheduler] Duration between two runs {SPURF_SCHEDULER_INTERVAL} (default "24h")
-  -schedulerMaxRetry uint
-        [scheduler] Max retry {SPURF_SCHEDULER_MAX_RETRY} (default 10)
-  -schedulerMinute int
-        [scheduler] Minute of running {SPURF_SCHEDULER_MINUTE}
-  -schedulerOnStart
-        [scheduler] Start scheduler on start {SPURF_SCHEDULER_ON_START}
-  -schedulerRetry string
-        [scheduler] Duration between two retries {SPURF_SCHEDULER_RETRY} (default "10m")
-  -schedulerTimezone string
-        [scheduler] Timezone of running {SPURF_SCHEDULER_TIMEZONE} (default "Europe/Paris")
   -tracingAgent string
         [tracing] Jaeger Agent (e.g. host:port) {SPURF_TRACING_AGENT} (default "jaeger:6831")
   -tracingName string

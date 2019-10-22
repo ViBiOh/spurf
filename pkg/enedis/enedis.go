@@ -10,7 +10,6 @@ import (
 	"github.com/ViBiOh/httputils/v2/pkg/db"
 	"github.com/ViBiOh/httputils/v2/pkg/errors"
 	"github.com/ViBiOh/httputils/v2/pkg/logger"
-	"github.com/ViBiOh/httputils/v2/pkg/scheduler"
 	"github.com/ViBiOh/httputils/v2/pkg/tools"
 )
 
@@ -21,8 +20,6 @@ const (
 	frenchDateFormat = "02/01/2006"
 	isoDateFormat    = "2006-01-02"
 )
-
-var _ scheduler.Task = &App{}
 
 // Config of package
 type Config struct {
@@ -74,11 +71,11 @@ func New(config Config, db *sql.DB) (*App, error) {
 
 // Start the package
 func (a *App) Start() error {
-	return a.Do(context.Background(), time.Now().In(a.location))
+	return a.Do(time.Now().In(a.location))
 }
 
 // Do enedis fetch
-func (a *App) Do(ctx context.Context, currentTime time.Time) error {
+func (a *App) Do(currentTime time.Time) error {
 	if err := a.Login(); err != nil {
 		return err
 	}
