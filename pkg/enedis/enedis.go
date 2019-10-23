@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ViBiOh/httputils/v2/pkg/cron"
 	"github.com/ViBiOh/httputils/v2/pkg/db"
 	"github.com/ViBiOh/httputils/v2/pkg/errors"
 	"github.com/ViBiOh/httputils/v2/pkg/logger"
@@ -70,12 +71,18 @@ func New(config Config, db *sql.DB) (*App, error) {
 }
 
 // Start the package
-func (a *App) Start() error {
-	return a.Do(time.Now().In(a.location))
+func (a *App) Start() {
+	if err := a.Fetch(time.Now().In(a.location)); err != nil {
+		logger.Error("%+v", err)
+	}
+
+	cron.NewCron().Days().At("08:00").Start(a.Fetch, func(err error) {
+		logger.Error("%+v", err)
+	})
 }
 
-// Do enedis fetch
-func (a *App) Do(currentTime time.Time) error {
+// Fetch enedis fetch
+func (a *App) Fetch(currentTime time.Time) error {
 	if err := a.Login(); err != nil {
 		return err
 	}

@@ -6,6 +6,7 @@ services:
     labels:
       traefik.enable: "false"
     environment:
+      TZ: "Europe/Paris"
       SPURF_ENEDIS_EMAIL: "${ENEDIS_EMAIL}"
       SPURF_ENEDIS_PASSWORD: "${ENEDIS_PASSWORD}"
       SPURF_DB_HOST: "${SPURF_DATABASE_HOST}"

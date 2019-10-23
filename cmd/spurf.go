@@ -4,7 +4,6 @@ import (
 	"flag"
 	"os"
 
-	"github.com/ViBiOh/httputils/v2/pkg/cron"
 	"github.com/ViBiOh/httputils/v2/pkg/db"
 	"github.com/ViBiOh/httputils/v2/pkg/logger"
 	"github.com/ViBiOh/httputils/v2/pkg/opentracing"
@@ -34,11 +33,5 @@ func main() {
 	enedisApp, err := enedis.New(enedisConfig, spurfDb)
 	logger.Fatal(err)
 
-	if err := enedisApp.Start(); err != nil {
-		logger.Error("%#v", err)
-	}
-
-	cron.NewCron().Days().At("08:00").Start(enedisApp.Do, func(err error) {
-		logger.Error("%+v", err)
-	})
+	enedisApp.Start()
 }
