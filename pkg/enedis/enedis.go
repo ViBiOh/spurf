@@ -76,7 +76,7 @@ func (a *App) Start() {
 		logger.Error("%+v", err)
 	}
 
-	cron.NewCron().Days().At("08:00").In(a.location).Start(a.Fetch, func(err error) {
+	cron.New().Days().At("08:00").In(a.location.String()).Start(a.Fetch, func(err error) {
 		logger.Error("%+v", err)
 	})
 }
