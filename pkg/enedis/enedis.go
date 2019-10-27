@@ -22,6 +22,11 @@ const (
 	isoDateFormat    = "2006-01-02"
 )
 
+// App of package
+type App interface {
+	Start()
+}
+
 // Config of package
 type Config struct {
 	email    *string
@@ -29,8 +34,7 @@ type Config struct {
 	timezone *string
 }
 
-// App of package
-type App struct {
+type app struct {
 	email    string
 	password string
 	cookie   string
@@ -49,7 +53,7 @@ func Flags(fs *flag.FlagSet, prefix string) Config {
 }
 
 // New creates new App from Config
-func New(config Config, db *sql.DB) (*App, error) {
+func New(config Config, db *sql.DB) (App, error) {
 	location, err := time.LoadLocation(strings.TrimSpace(*config.timezone))
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -62,7 +66,7 @@ func New(config Config, db *sql.DB) (*App, error) {
 		return nil, errors.New("no credentials provided")
 	}
 
-	return &App{
+	return &app{
 		email:    email,
 		password: password,
 		location: location,
@@ -71,19 +75,14 @@ func New(config Config, db *sql.DB) (*App, error) {
 }
 
 // Start the package
-func (a *App) Start() {
-	if err := a.Fetch(time.Now().In(a.location)); err != nil {
-		logger.Error("%+v", err)
-	}
-
-	cron.New().Days().At("08:00").In(a.location.String()).Start(a.Fetch, func(err error) {
+func (a app) Start() {
+	cron.New().Days().At("08:00").In(a.location.String()).Retry(time.Hour).MaxRetry(5).Now().Start(a.fetch, func(err error) {
 		logger.Error("%+v", err)
 	})
 }
 
-// Fetch enedis fetch
-func (a *App) Fetch(currentTime time.Time) error {
-	if err := a.Login(); err != nil {
+func (a app) fetch(currentTime time.Time) error {
+	if err := a.login(); err != nil {
 		return err
 	}
 
@@ -111,10 +110,10 @@ func (a *App) Fetch(currentTime time.Time) error {
 	return nil
 }
 
-func (a *App) fetchAndSave(ctx context.Context, date string) (err error) {
+func (a app) fetchAndSave(ctx context.Context, date string) (err error) {
 	var data *Consumption
 
-	data, err = a.GetData(ctx, date, true)
+	data, err = a.getData(ctx, date, true)
 	if err != nil {
 		return
 	}

@@ -15,7 +15,7 @@ FROM
   enedis_value;
 `
 
-func (a *App) getLastFetch() (lastTimestamp time.Time, err error) {
+func (a app) getLastFetch() (lastTimestamp time.Time, err error) {
 	if err = a.db.QueryRow(lastFetch).Scan(&lastTimestamp); err != nil {
 		err = errors.WithStack(err)
 		return
@@ -36,7 +36,7 @@ INSERT INTO
 );
 `
 
-func (a *App) saveValue(o *Value, tx *sql.Tx) (err error) {
+func (a app) saveValue(o *Value, tx *sql.Tx) (err error) {
 	if o == nil {
 		return errors.New("cannot save nil Value")
 	}

@@ -9,7 +9,7 @@ import (
 	"github.com/ViBiOh/httputils/v2/pkg/logger"
 )
 
-func (a *App) appendSessionCookie(headers http.Header) {
+func (a app) appendSessionCookie(headers http.Header) {
 	for _, cookie := range headers["Set-Cookie"] {
 		if strings.HasPrefix(cookie, "JSESSIONID") {
 			a.cookie = fmt.Sprintf("%s; %s", a.cookie, getCookieValue(cookie))
