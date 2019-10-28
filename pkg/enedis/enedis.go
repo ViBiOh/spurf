@@ -75,13 +75,13 @@ func New(config Config, db *sql.DB) (App, error) {
 }
 
 // Start the package
-func (a app) Start() {
+func (a *app) Start() {
 	cron.New().Days().At("08:00").In(a.location.String()).Retry(time.Hour).MaxRetry(5).Now().Start(a.fetch, func(err error) {
 		logger.Error("%+v", err)
 	})
 }
 
-func (a app) fetch(currentTime time.Time) error {
+func (a *app) fetch(currentTime time.Time) error {
 	if err := a.login(); err != nil {
 		return err
 	}
@@ -110,7 +110,7 @@ func (a app) fetch(currentTime time.Time) error {
 	return nil
 }
 
-func (a app) fetchAndSave(ctx context.Context, date string) (err error) {
+func (a *app) fetchAndSave(ctx context.Context, date string) (err error) {
 	var data *Consumption
 
 	data, err = a.getData(ctx, date, true)

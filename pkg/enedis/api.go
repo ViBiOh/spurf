@@ -17,7 +17,7 @@ const (
 	oneDay = 24 * time.Hour
 )
 
-func (a app) login() error {
+func (a *app) login() error {
 	if a.email == "" || a.password == "" {
 		return errors.New("no credentials provided")
 	}
@@ -56,7 +56,7 @@ func (a app) login() error {
 	return nil
 }
 
-func (a app) getData(ctx context.Context, startDate string, first bool) (*Consumption, error) {
+func (a *app) getData(ctx context.Context, startDate string, first bool) (*Consumption, error) {
 	header := http.Header{}
 	header.Set("Cookie", a.cookie)
 
