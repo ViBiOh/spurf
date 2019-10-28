@@ -25,8 +25,4 @@ Usage of spurf:
         [enedis] Password {SPURF_ENEDIS_PASSWORD}
   -enedisTimezone string
         [enedis] Timezone {SPURF_ENEDIS_TIMEZONE} (default "Europe/Paris")
-  -tracingAgent string
-        [tracing] Jaeger Agent (e.g. host:port) {SPURF_TRACING_AGENT} (default "jaeger:6831")
-  -tracingName string
-        [tracing] Service name {SPURF_TRACING_NAME}
 ```
