@@ -3,15 +3,15 @@ package enedis
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"flag"
 	"strings"
 	"time"
 
-	"github.com/ViBiOh/httputils/v2/pkg/cron"
-	"github.com/ViBiOh/httputils/v2/pkg/db"
-	"github.com/ViBiOh/httputils/v2/pkg/errors"
-	"github.com/ViBiOh/httputils/v2/pkg/logger"
-	"github.com/ViBiOh/httputils/v2/pkg/tools"
+	"github.com/ViBiOh/httputils/v3/pkg/cron"
+	"github.com/ViBiOh/httputils/v3/pkg/db"
+	"github.com/ViBiOh/httputils/v3/pkg/flags"
+	"github.com/ViBiOh/httputils/v3/pkg/logger"
 )
 
 const (
@@ -46,9 +46,9 @@ type app struct {
 // Flags adds flags for configuring package
 func Flags(fs *flag.FlagSet, prefix string) Config {
 	return Config{
-		email:    tools.NewFlag(prefix, "enedis").Name("Email").Default("").Label("Email").ToString(fs),
-		password: tools.NewFlag(prefix, "enedis").Name("Password").Default("").Label("Password").ToString(fs),
-		timezone: tools.NewFlag(prefix, "enedis").Name("Timezone").Default("Europe/Paris").Label("Timezone").ToString(fs),
+		email:    flags.New(prefix, "enedis").Name("Email").Default("").Label("Email").ToString(fs),
+		password: flags.New(prefix, "enedis").Name("Password").Default("").Label("Password").ToString(fs),
+		timezone: flags.New(prefix, "enedis").Name("Timezone").Default("Europe/Paris").Label("Timezone").ToString(fs),
 	}
 }
 
@@ -56,7 +56,7 @@ func Flags(fs *flag.FlagSet, prefix string) Config {
 func New(config Config, db *sql.DB) (App, error) {
 	location, err := time.LoadLocation(strings.TrimSpace(*config.timezone))
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, err
 	}
 
 	email := strings.TrimSpace(*config.email)

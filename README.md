@@ -17,6 +17,8 @@ Usage of spurf:
         [db] Pass {SPURF_DB_PASS}
   -dbPort string
         [db] Port {SPURF_DB_PORT} (default "5432")
+  -dbSslmode string
+        [db] SSL Mode {SPURF_DB_SSLMODE} (default "disable")
   -dbUser string
         [db] User {SPURF_DB_USER}
   -enedisEmail string

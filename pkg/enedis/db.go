@@ -2,10 +2,11 @@ package enedis
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
 	"time"
 
-	"github.com/ViBiOh/httputils/v2/pkg/db"
-	"github.com/ViBiOh/httputils/v2/pkg/errors"
+	"github.com/ViBiOh/httputils/v3/pkg/db"
 )
 
 const lastFetch = `
@@ -16,11 +17,7 @@ FROM
 `
 
 func (a *app) getLastFetch() (lastTimestamp time.Time, err error) {
-	if err = a.db.QueryRow(lastFetch).Scan(&lastTimestamp); err != nil {
-		err = errors.WithStack(err)
-		return
-	}
-
+	err = a.db.QueryRow(lastFetch).Scan(&lastTimestamp)
 	return
 }
 
@@ -53,7 +50,7 @@ func (a *app) saveValue(o *Value, tx *sql.Tx) (err error) {
 	}
 
 	if _, err = usedTx.Exec(insertQuery, o.Timestamp, o.Valeur); err != nil {
-		err = errors.Wrap(err, "unable to save %#v", o)
+		err = fmt.Errorf("unable to save %#v: %w", o, err)
 		return
 	}
 

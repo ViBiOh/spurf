@@ -3,14 +3,14 @@ package enedis
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
 
-	"github.com/ViBiOh/httputils/v2/pkg/errors"
-	"github.com/ViBiOh/httputils/v2/pkg/request"
+	"github.com/ViBiOh/httputils/v3/pkg/request"
 )
 
 const (
@@ -30,7 +30,7 @@ func (a *app) login() error {
 	values.Add("gx_charset", "UTF-8")
 
 	ctx := context.Background()
-	_, _, headers, err := request.PostForm(ctx, loginURL, values, nil)
+	_, _, headers, err := request.Post(ctx, loginURL, values, nil)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (a *app) getData(ctx context.Context, startDate string, first bool) (*Consu
 
 	startTime, err := time.ParseInLocation(frenchDateFormat, startDate, a.location)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, err
 	}
 	endDate := startTime.Add(oneDay).Format(frenchDateFormat)
 
@@ -80,7 +80,7 @@ func (a *app) getData(ctx context.Context, startDate string, first bool) (*Consu
 	params.Add("_lincspartdisplaycdc_WAR_lincspartcdcportlet_dateDebut", startDate)
 	params.Add("_lincspartdisplaycdc_WAR_lincspartcdcportlet_dateFin", endDate)
 
-	body, status, headers, err := request.PostForm(ctx, fmt.Sprintf("%s%s", consumeURL, params.Encode()), values, header)
+	body, status, headers, err := request.Post(ctx, fmt.Sprintf("%s%s", consumeURL, params.Encode()), values, header)
 	if err != nil || status == http.StatusFound {
 		if first {
 			a.appendSessionCookie(headers)
@@ -94,18 +94,18 @@ func (a *app) getData(ctx context.Context, startDate string, first bool) (*Consu
 		return nil, err
 	}
 
-	payload, err := request.ReadBody(body)
+	payload, err := request.ReadContent(body)
 	if err != nil {
 		return nil, err
 	}
 
 	var response Consumption
 	if err := json.Unmarshal(payload, &response); err != nil {
-		return nil, errors.WithStack(err)
+		return nil, err
 	}
 
 	if response.Etat != nil && response.Etat.Valeur == "erreur" {
-		return nil, errors.New("API error: %s", response.Etat.ErreurText)
+		return nil, fmt.Errorf("API error: %s", response.Etat.ErreurText)
 	}
 
 	for _, value := range response.Graphe.Data {

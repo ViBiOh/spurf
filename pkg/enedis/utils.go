@@ -5,8 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/ViBiOh/httputils/v2/pkg/errors"
-	"github.com/ViBiOh/httputils/v2/pkg/logger"
+	"github.com/ViBiOh/httputils/v3/pkg/logger"
 )
 
 func (a *app) appendSessionCookie(headers http.Header) {
@@ -19,7 +18,7 @@ func (a *app) appendSessionCookie(headers http.Header) {
 
 func safeWrite(w *strings.Builder, content string) {
 	if _, err := w.WriteString(content); err != nil {
-		logger.Error("%#v", errors.WithStack(err))
+		logger.Error("%s", err)
 	}
 }
 
