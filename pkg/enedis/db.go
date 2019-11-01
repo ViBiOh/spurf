@@ -18,6 +18,7 @@ FROM
 
 func (a *app) getLastFetch() (lastTimestamp time.Time, err error) {
 	err = a.db.QueryRow(lastFetch).Scan(&lastTimestamp)
+
 	return
 }
 

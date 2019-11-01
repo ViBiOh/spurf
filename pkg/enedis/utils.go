@@ -1,27 +1,14 @@
 package enedis
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
-
-	"github.com/ViBiOh/httputils/v3/pkg/logger"
 )
 
-func (a *app) appendSessionCookie(headers http.Header) {
-	for _, cookie := range headers["Set-Cookie"] {
-		if strings.HasPrefix(cookie, "JSESSIONID") {
-			a.cookie = fmt.Sprintf("%s; %s", a.cookie, getCookieValue(cookie))
+func (a *app) appendCookies(response *http.Response) {
+	for _, cookie := range response.Cookies() {
+		if strings.Contains(cookie.Domain, "enedis.fr") || cookie.Domain == "" {
+			a.cookies = append(a.cookies, cookie)
 		}
 	}
-}
-
-func safeWrite(w *strings.Builder, content string) {
-	if _, err := w.WriteString(content); err != nil {
-		logger.Error("%s", err)
-	}
-}
-
-func getCookieValue(cookie string) string {
-	return strings.SplitN(cookie, ";", 2)[0]
 }

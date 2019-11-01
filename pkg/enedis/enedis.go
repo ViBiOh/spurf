@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"flag"
+	"net/http"
 	"strings"
 	"time"
 
@@ -15,9 +16,6 @@ import (
 )
 
 const (
-	loginURL   = "https://espace-client-connexion.enedis.fr/auth/UI/Login"
-	consumeURL = "https://espace-client-particuliers.enedis.fr/group/espace-particuliers/suivi-de-consommation?"
-
 	frenchDateFormat = "02/01/2006"
 	isoDateFormat    = "2006-01-02"
 )
@@ -37,7 +35,7 @@ type Config struct {
 type app struct {
 	email    string
 	password string
-	cookie   string
+	cookies  []*http.Cookie
 
 	location *time.Location
 	db       *sql.DB
@@ -77,7 +75,7 @@ func New(config Config, db *sql.DB) (App, error) {
 // Start the package
 func (a *app) Start() {
 	cron.New().Days().At("08:00").In(a.location.String()).Retry(time.Hour).MaxRetry(5).Now().Start(a.fetch, func(err error) {
-		logger.Error("%+v", err)
+		logger.Error("%s", err)
 	})
 }
 
@@ -96,15 +94,14 @@ func (a *app) fetch(currentTime time.Time) error {
 	currentDate := currentTime.Format(isoDateFormat)
 	lastSync := lastTimestamp.In(a.location).Truncate(oneDay).Add(oneDay)
 
-	for lastSync.Format(isoDateFormat) != currentDate {
-		lastSyncFrench := lastSync.Format(frenchDateFormat)
-
-		logger.Info("Fetching data for %s", lastSyncFrench)
-		if err := a.fetchAndSave(context.Background(), lastSyncFrench); err != nil {
+	for lastSync.Format(isoDateFormat) < currentDate {
+		date := lastSync.Format(isoDateFormat)
+		logger.Info("Fetching data for %s", date)
+		if err := a.fetchAndSave(context.Background(), date); err != nil {
 			return err
 		}
 
-		lastSync = lastSync.Add(oneDay)
+		lastSync = lastSync.AddDate(0, 0, 1)
 	}
 
 	return nil

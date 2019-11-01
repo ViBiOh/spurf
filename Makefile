@@ -81,10 +81,4 @@ build:
 ## start: Start app
 .PHONY: start
 start:
-	$(APP_STARTER) \
-		-dbHost $(SPURF_DB_HOST) \
-		-dbName $(SPURF_DB_NAME) \
-		-dbPass $(SPURF_DB_PASS) \
-		-dbUser $(SPURF_DB_USER) \
-		-enedisEmail $(ENEDIS_EMAIL) \
-		-enedisPassword $(ENEDIS_PASSWORD)
+	$(APP_STARTER)
