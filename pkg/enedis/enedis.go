@@ -91,6 +91,8 @@ func (a *app) fetch(currentTime time.Time) error {
 		return err
 	}
 
+	logger.Info("Last fetch was %s", lastTimestamp)
+
 	currentDate := currentTime.Format(isoDateFormat)
 	lastSync := lastTimestamp.In(a.location).Truncate(oneDay).Add(oneDay)
 
