@@ -32,13 +32,13 @@ func (a *app) login() error {
 	values.Add("gx_charset", "UTF-8")
 
 	ctx := context.Background()
-	response, err := request.Post(ctx, loginURL, values, nil)
+	resp, err := request.New().Post(loginURL).Form(ctx, values)
 	if err != nil {
 		return err
 	}
 
 	a.cookies = make([]*http.Cookie, 0)
-	a.appendCookies(response)
+	a.appendCookies(resp)
 
 	return nil
 }
@@ -64,10 +64,7 @@ func (a *app) getData(ctx context.Context, startDate string, first bool) (*Consu
 	values.Add("_lincspartdisplaycdc_WAR_lincspartcdcportlet_dateDebut", startTime.Format(frenchDateFormat))
 	values.Add("_lincspartdisplaycdc_WAR_lincspartcdcportlet_dateFin", startTime.AddDate(0, 0, 1).Format(frenchDateFormat))
 
-	header := http.Header{}
-	header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	req, err := request.New(ctx, http.MethodPost, fmt.Sprintf("%s%s", consumeURL, params.Encode()), strings.NewReader(values.Encode()), header)
+	req, err := request.New().Post(fmt.Sprintf("%s%s", consumeURL, params.Encode())).ContentForm().Build(ctx, strings.NewReader(values.Encode()))
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +73,7 @@ func (a *app) getData(ctx context.Context, startDate string, first bool) (*Consu
 		req.AddCookie(cookie)
 	}
 
-	resp, err := request.Do(ctx, req)
+	resp, err := request.Do(req)
 	if err != nil || (resp != nil && resp.StatusCode == http.StatusFound) {
 		if first {
 			a.appendCookies(resp)
