@@ -8,15 +8,15 @@ RUN make \
  && git diff --quiet -- *.go
 
 ARG CODECOV_TOKEN
-RUN curl -q -sS https://codecov.io/bash | bash
+RUN curl -sSqL --max-time 10 https://codecov.io/bash | bash
 
 FROM alpine as fetcher
 
 WORKDIR /app
 
 RUN apk --update add curl \
- && curl -q -sS -o /app/cacert.pem https://curl.haxx.se/ca/cacert.pem \
- && curl -q -sS -o /app/zoneinfo.zip https://raw.githubusercontent.com/golang/go/master/lib/time/zoneinfo.zip
+ && curl -sSqL --max-time 10 -o /app/cacert.pem https://curl.haxx.se/ca/cacert.pem \
+ && curl -sSqL --max-time 10 -o /app/zoneinfo.zip https://raw.githubusercontent.com/golang/go/master/lib/time/zoneinfo.zip
 
 FROM scratch
 
