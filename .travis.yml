@@ -27,18 +27,10 @@ jobs:
   - stage: Deploy
 
     language: minimal
-    script: |
-     sed \
-        -e "s|\${ENEDIS_EMAIL}|${ENEDIS_EMAIL}|g" \
-        -e "s|\${ENEDIS_PASSWORD}|${ENEDIS_PASSWORD}|g" \
-        -e "s|\${SPURF_DATABASE_HOST}|${SPURF_DATABASE_HOST}|g" \
-        -e "s|\${SPURF_DATABASE_NAME}|${SPURF_DATABASE_NAME}|g" \
-        -e "s|\${SPURF_DATABASE_USER}|${SPURF_DATABASE_USER}|g" \
-        -e "s|\${SPURF_DATABASE_PASS}|${SPURF_DATABASE_PASS}|g" \
-        -e "s|\\\$|\$\$|g" \
-        docker-compose.yml > docker-compose-env.yml
-      curl -q -sSL --max-time 10 "https://raw.githubusercontent.com/ViBiOh/scripts/master/bootstrap" | bash -s "deploy"
-      scripts/deploy "$(make name)" "@docker-compose-env.yml"
+    script:
+    - curl -q -sSL --max-time 10 "https://raw.githubusercontent.com/ViBiOh/scripts/master/bootstrap" | bash -s "deploy" "env_replace"
+    - scripts/env_replace docker-compose.yml ENEDIS_EMAIL ENEDIS_PASSWORD SPURF_DATABASE_HOST SPURF_DATABASE_NAME SPURF_DATABASE_USER SPURF_DATABASE_PASS | sed "s|\\\$|\$\$|g" > docker-compose-env.yml
+    - scripts/deploy "$(make name)" "@docker-compose-env.yml"
 
 stages:
   - Build
