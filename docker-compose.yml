@@ -3,7 +3,7 @@
 version: "2"
 
 services:
-  api:
+  main:
     image: vibioh/spurf
     labels:
       traefik.enable: "false"
@@ -14,6 +14,24 @@ services:
       SPURF_DB_NAME: "${SPURF_DATABASE_NAME}"
       SPURF_DB_USER: "${SPURF_DATABASE_USER}"
       SPURF_DB_PASS: "${SPURF_DATABASE_PASS}"
+    restart: on-failure:5
+    read_only: true
+    cpu_shares: 128
+    mem_limit: 25165824
+    security_opt:
+      - no-new-privileges
+
+  wild:
+    image: vibioh/spurf
+    labels:
+      traefik.enable: "false"
+    environment:
+      SPURF_ENEDIS_EMAIL: "${ENEDIS_EMAIL_WILD}"
+      SPURF_ENEDIS_PASSWORD: "${ENEDIS_PASSWORD_WILD}"
+      SPURF_DB_HOST: "${SPURF_DATABASE_HOST_WILD}"
+      SPURF_DB_NAME: "${SPURF_DATABASE_NAME_WILD}"
+      SPURF_DB_USER: "${SPURF_DATABASE_USER_WILD}"
+      SPURF_DB_PASS: "${SPURF_DATABASE_PASS_WILD}"
     restart: on-failure:5
     read_only: true
     cpu_shares: 128
