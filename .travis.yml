@@ -31,7 +31,7 @@ jobs:
       language: minimal
       script:
         - curl -q -sSL --max-time 10 "https://raw.githubusercontent.com/ViBiOh/scripts/master/bootstrap" | bash -s "deploy" "env_replace"
-        - scripts/env_replace docker-compose.yml ENEDIS_EMAIL ENEDIS_PASSWORD SPURF_DATABASE_HOST SPURF_DATABASE_NAME SPURF_DATABASE_USER SPURF_DATABASE_PASS | sed "s|\\\$|\$\$|g" > docker-compose-env.yml
+        - scripts/env_replace docker-compose.yml ENEDIS_EMAIL ENEDIS_PASSWORD SPURF_DATABASE_HOST SPURF_DATABASE_NAME SPURF_DATABASE_USER SPURF_DATABASE_PASS WILD_ENEDIS_EMAIL WILD_ENEDIS_PASSWORD WILD_DATABASE_HOST WILD_DATABASE_NAME WILD_DATABASE_USER WILD_DATABASE_PASS | sed "s|\\\$|\$\$|g" > docker-compose-env.yml
         - scripts/deploy "$(make name)" "@docker-compose-env.yml"
 
 stages:
