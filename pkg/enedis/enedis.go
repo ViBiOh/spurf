@@ -80,6 +80,7 @@ func New(config Config, db *sql.DB) (App, error) {
 func (a *app) Start() {
 	if !a.cron {
 		logger.Fatal(a.fetch(time.Now()))
+		return
 	}
 
 	cron.New().Days().At("08:00").In(a.location.String()).Retry(time.Hour).MaxRetry(5).Now().Start(a.fetch, func(err error) {
