@@ -30,11 +30,13 @@ type Config struct {
 	email    *string
 	password *string
 	timezone *string
+	cron     *bool
 }
 
 type app struct {
 	email    string
 	password string
+	cron     bool
 	cookies  []*http.Cookie
 
 	location *time.Location
@@ -47,6 +49,7 @@ func Flags(fs *flag.FlagSet, prefix string) Config {
 		email:    flags.New(prefix, "enedis").Name("Email").Default("").Label("Email").ToString(fs),
 		password: flags.New(prefix, "enedis").Name("Password").Default("").Label("Password").ToString(fs),
 		timezone: flags.New(prefix, "enedis").Name("Timezone").Default("Europe/Paris").Label("Timezone").ToString(fs),
+		cron:     flags.New(prefix, "enedis").Name("Cron").Default(false).Label("Start enedis as a cron").ToBool(fs),
 	}
 }
 
@@ -68,12 +71,17 @@ func New(config Config, db *sql.DB) (App, error) {
 		email:    email,
 		password: password,
 		location: location,
+		cron:     *config.cron,
 		db:       db,
 	}, nil
 }
 
 // Start the package
 func (a *app) Start() {
+	if !a.cron {
+		logger.Fatal(a.fetch(time.Now()))
+	}
+
 	cron.New().Days().At("08:00").In(a.location.String()).Retry(time.Hour).MaxRetry(5).Now().Start(a.fetch, func(err error) {
 		logger.Error("%s", err)
 	})

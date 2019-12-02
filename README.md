@@ -21,6 +21,8 @@ Usage of spurf:
         [db] SSL Mode {SPURF_DB_SSLMODE} (default "disable")
   -dbUser string
         [db] User {SPURF_DB_USER}
+  -enedisCron
+        [enedis] Start enedis as a cron {SPURF_ENEDIS_CRON}
   -enedisEmail string
         [enedis] Email {SPURF_ENEDIS_EMAIL}
   -enedisPassword string

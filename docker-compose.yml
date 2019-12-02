@@ -8,6 +8,7 @@ services:
     labels:
       traefik.enable: "false"
     environment:
+      SPURF_ENEDIS_CRON: "true"
       SPURF_ENEDIS_EMAIL: "${ENEDIS_EMAIL}"
       SPURF_ENEDIS_PASSWORD: "${ENEDIS_PASSWORD}"
       SPURF_DB_HOST: "${SPURF_DATABASE_HOST}"
@@ -26,6 +27,7 @@ services:
     labels:
       traefik.enable: "false"
     environment:
+      SPURF_ENEDIS_CRON: "true"
       SPURF_ENEDIS_EMAIL: "${WILD_ENEDIS_EMAIL}"
       SPURF_ENEDIS_PASSWORD: "${WILD_ENEDIS_PASSWORD}"
       SPURF_DB_HOST: "${WILD_DATABASE_HOST}"
