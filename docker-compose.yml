@@ -21,22 +21,3 @@ services:
     mem_limit: 25165824
     security_opt:
       - no-new-privileges
-
-  wild:
-    image: vibioh/spurf
-    labels:
-      traefik.enable: "false"
-    environment:
-      SPURF_ENEDIS_CRON: "true"
-      SPURF_ENEDIS_EMAIL: "${WILD_ENEDIS_EMAIL}"
-      SPURF_ENEDIS_PASSWORD: "${WILD_ENEDIS_PASSWORD}"
-      SPURF_DB_HOST: "${WILD_DATABASE_HOST}"
-      SPURF_DB_NAME: "${WILD_DATABASE_NAME}"
-      SPURF_DB_USER: "${WILD_DATABASE_USER}"
-      SPURF_DB_PASS: "${WILD_DATABASE_PASS}"
-    restart: on-failure:5
-    read_only: true
-    cpu_shares: 128
-    mem_limit: 25165824
-    security_opt:
-      - no-new-privileges
