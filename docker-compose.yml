@@ -4,7 +4,7 @@ version: "2"
 
 services:
   main:
-    image: vibioh/spurf
+    image: ${DOCKER_USER}/spurf
     labels:
       traefik.enable: "false"
     environment:
