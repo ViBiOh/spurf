@@ -1,10 +1,11 @@
 # scripts
 scripts/
 
-.env
-
 # Golang
 bin/
 release/
 output.txt
 coverage.txt
+
+# app
+.env
