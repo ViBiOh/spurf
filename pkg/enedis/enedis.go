@@ -119,7 +119,7 @@ func (a *app) fetch(currentTime time.Time) error {
 }
 
 func (a *app) fetchAndSave(ctx context.Context, date string) (err error) {
-	var data *Consumption
+	var data Consumption
 
 	data, err = a.getData(ctx, date, true)
 	if err != nil {
