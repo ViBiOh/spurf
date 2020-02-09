@@ -1,5 +1,9 @@
 package enedis
 
+var (
+	emptyConsumption = Consumption{}
+)
+
 // Consumption describes consumption response
 type Consumption struct {
 	Etat   *Etat

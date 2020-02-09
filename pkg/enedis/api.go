@@ -43,10 +43,10 @@ func (a *app) login() error {
 	return nil
 }
 
-func (a *app) getData(ctx context.Context, startDate string, first bool) (*Consumption, error) {
+func (a *app) getData(ctx context.Context, startDate string, first bool) (Consumption, error) {
 	startTime, err := time.ParseInLocation(isoDateFormat, startDate, a.location)
 	if err != nil {
-		return nil, err
+		return emptyConsumption, err
 	}
 
 	params := url.Values{}
@@ -66,7 +66,7 @@ func (a *app) getData(ctx context.Context, startDate string, first bool) (*Consu
 
 	req, err := request.New().Post(fmt.Sprintf("%s%s", consumeURL, params.Encode())).ContentForm().Build(ctx, strings.NewReader(values.Encode()))
 	if err != nil {
-		return nil, err
+		return emptyConsumption, err
 	}
 
 	for _, cookie := range a.cookies {
@@ -81,33 +81,37 @@ func (a *app) getData(ctx context.Context, startDate string, first bool) (*Consu
 		}
 
 		if err == nil {
-			return nil, errors.New("unable to authent to enedis on the second try")
+			return emptyConsumption, errors.New("unable to authent to enedis on the second try")
 		}
 
-		return nil, err
+		return emptyConsumption, err
 	}
 
 	payload, err := request.ReadBodyResponse(resp)
 	if err != nil {
-		return nil, err
+		return emptyConsumption, err
 	}
 
+	return parseResponse(startTime, payload)
+}
+
+func parseResponse(startTime time.Time, payload []byte) (Consumption, error) {
 	var consumption Consumption
 	if err := json.Unmarshal(payload, &consumption); err != nil {
-		return nil, err
+		return emptyConsumption, err
 	}
 
 	if consumption.Etat != nil && consumption.Etat.Valeur == "erreur" {
-		return nil, fmt.Errorf("API error: %s", consumption.Etat.ErreurText)
+		return emptyConsumption, fmt.Errorf("API error: %s", consumption.Etat.ErreurText)
 	}
 
 	if consumption.Etat != nil && consumption.Etat.Valeur == "nonActive" {
-		return nil, errors.New("Non active data")
+		return emptyConsumption, errors.New("Non active data")
 	}
 
 	for _, value := range consumption.Graphe.Data {
 		value.Timestamp = startTime.Add(time.Duration(30*(value.Ordre-1)) * time.Minute).Unix()
 	}
 
-	return &consumption, nil
+	return consumption, nil
 }
