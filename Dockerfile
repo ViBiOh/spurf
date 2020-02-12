@@ -21,4 +21,4 @@ ARG ARCH
 
 COPY --from=fetcher /app/cacert.pem /etc/ssl/certs/ca-certificates.crt
 COPY --from=fetcher /app/zoneinfo.zip /
-COPY spurf_${OS}_${ARCH} /spurf
+COPY release/spurf_${OS}_${ARCH} /spurf
