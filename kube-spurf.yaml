@@ -1,0 +1,50 @@
+---
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: spurf
+
+spec:
+  schedule: "0 8 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+
+          containers:
+            - name: spurf
+              image: vibioh/spurf
+              imagePullPolicy: Always
+              env:
+                - name: SPURF_ENEDIS_EMAIL
+                  valueFrom:
+                    secretKeyRef:
+                      name: spurf
+                      key: enedis_email
+                - name: SPURF_ENEDIS_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: spurf
+                      key: enedis_password
+                - name: SPURF_DB_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: spurf
+                      key: spurf_db_host
+                - name: SPURF_DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: spurf
+                      key: spurf_db_name
+                - name: SPURF_DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: spurf
+                      key: spurf_db_user
+                - name: SPURF_DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: spurf
+                      key: spurf_db_pass
