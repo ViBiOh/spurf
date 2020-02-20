@@ -4,8 +4,9 @@ scripts/
 # Golang
 bin/
 release/
-output.txt
-coverage.txt
+coverage.*
+profile.out
 
-# app
-.env
+# Files
+cacert.pem
+zoneinfo.zip
