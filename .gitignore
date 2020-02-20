@@ -8,5 +8,6 @@ coverage.*
 profile.out
 
 # Files
+.env
 cacert.pem
 zoneinfo.zip
