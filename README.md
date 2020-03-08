@@ -16,8 +16,8 @@ Usage of spurf:
         [db] Name {SPURF_DB_NAME}
   -dbPass string
         [db] Pass {SPURF_DB_PASS}
-  -dbPort string
-        [db] Port {SPURF_DB_PORT} (default "5432")
+  -dbPort uint
+        [db] Port {SPURF_DB_PORT} (default 5432)
   -dbSslmode string
         [db] SSL Mode {SPURF_DB_SSLMODE} (default "disable")
   -dbUser string
@@ -26,6 +26,8 @@ Usage of spurf:
         [enedis] Start enedis as a cron {SPURF_ENEDIS_CRON}
   -enedisEmail string
         [enedis] Email {SPURF_ENEDIS_EMAIL}
+  -enedisLegacy
+        [enedis] Use legacy API {SPURF_ENEDIS_LEGACY} (default true)
   -enedisPassword string
         [enedis] Password {SPURF_ENEDIS_PASSWORD}
   -enedisTimezone string

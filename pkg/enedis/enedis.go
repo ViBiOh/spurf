@@ -30,12 +30,14 @@ type Config struct {
 	email    *string
 	password *string
 	timezone *string
+	legacy   *bool
 	cron     *bool
 }
 
 type app struct {
 	email    string
 	password string
+	legacy   bool
 	cron     bool
 	cookies  []*http.Cookie
 
@@ -49,6 +51,7 @@ func Flags(fs *flag.FlagSet, prefix string) Config {
 		email:    flags.New(prefix, "enedis").Name("Email").Default("").Label("Email").ToString(fs),
 		password: flags.New(prefix, "enedis").Name("Password").Default("").Label("Password").ToString(fs),
 		timezone: flags.New(prefix, "enedis").Name("Timezone").Default("Europe/Paris").Label("Timezone").ToString(fs),
+		legacy:   flags.New(prefix, "enedis").Name("Legacy").Default(true).Label("Use legacy API").ToBool(fs),
 		cron:     flags.New(prefix, "enedis").Name("Cron").Default(false).Label("Start enedis as a cron").ToBool(fs),
 	}
 }
@@ -79,16 +82,16 @@ func New(config Config, db *sql.DB) (App, error) {
 // Start the package
 func (a *app) Start() {
 	if !a.cron {
-		logger.Fatal(a.fetch(time.Now()))
+		logger.Fatal(a.run(time.Now()))
 		return
 	}
 
-	cron.New().Days().At("08:00").In(a.location.String()).Retry(time.Hour).MaxRetry(5).Now().Start(a.fetch, func(err error) {
+	cron.New().Days().At("08:00").In(a.location.String()).Retry(time.Hour).MaxRetry(5).Now().Start(a.run, func(err error) {
 		logger.Error("%s", err)
 	})
 }
 
-func (a *app) fetch(currentTime time.Time) error {
+func (a *app) run(currentTime time.Time) error {
 	if err := a.login(); err != nil {
 		return err
 	}
@@ -107,8 +110,15 @@ func (a *app) fetch(currentTime time.Time) error {
 
 	for lastSync.Format(isoDateFormat) < currentDate {
 		date := lastSync.Format(isoDateFormat)
+
 		logger.Info("Fetching data for %s", date)
-		if err := a.fetchAndSave(context.Background(), date); err != nil {
+		data, err := a.fetch(context.Background(), date)
+		if err != nil {
+			return err
+		}
+
+		logger.Info("Saving data for %s", date)
+		if err := a.save(context.Background(), data); err != nil {
 			return err
 		}
 
@@ -118,14 +128,11 @@ func (a *app) fetch(currentTime time.Time) error {
 	return nil
 }
 
-func (a *app) fetchAndSave(ctx context.Context, date string) (err error) {
-	var data Consumption
+func (a *app) fetch(ctx context.Context, date string) (Consumption, error) {
+	return a.getDataFromLegacy(ctx, date, true)
+}
 
-	data, err = a.getData(ctx, date, true)
-	if err != nil {
-		return
-	}
-
+func (a *app) save(ctx context.Context, data Consumption) (err error) {
 	var tx *sql.Tx
 	if tx, err = db.GetTx(a.db, nil); err != nil {
 		return

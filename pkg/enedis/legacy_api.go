@@ -14,9 +14,9 @@ import (
 )
 
 const (
-	loginURL   = "https://espace-client-connexion.enedis.fr/auth/UI/Login"
-	consumeURL = "https://espace-client-particuliers.enedis.fr/group/espace-particuliers/suivi-de-consommation?"
-	oneDay     = 24 * time.Hour
+	loginURL         = "https://espace-client-connexion.enedis.fr/auth/UI/Login"
+	legacyConsumeURL = "https://espace-client-particuliers.enedis.fr/group/espace-particuliers/suivi-de-consommation?"
+	oneDay           = 24 * time.Hour
 )
 
 func (a *app) login() error {
@@ -43,7 +43,7 @@ func (a *app) login() error {
 	return nil
 }
 
-func (a *app) getData(ctx context.Context, startDate string, first bool) (Consumption, error) {
+func (a *app) getDataFromLegacy(ctx context.Context, startDate string, first bool) (Consumption, error) {
 	startTime, err := time.ParseInLocation(isoDateFormat, startDate, a.location)
 	if err != nil {
 		return emptyConsumption, err
@@ -64,7 +64,7 @@ func (a *app) getData(ctx context.Context, startDate string, first bool) (Consum
 	values.Add("_lincspartdisplaycdc_WAR_lincspartcdcportlet_dateDebut", startTime.Format(frenchDateFormat))
 	values.Add("_lincspartdisplaycdc_WAR_lincspartcdcportlet_dateFin", startTime.AddDate(0, 0, 1).Format(frenchDateFormat))
 
-	req, err := request.New().Post(fmt.Sprintf("%s%s", consumeURL, params.Encode())).ContentForm().Build(ctx, strings.NewReader(values.Encode()))
+	req, err := request.New().Post(fmt.Sprintf("%s%s", legacyConsumeURL, params.Encode())).ContentForm().Build(ctx, strings.NewReader(values.Encode()))
 	if err != nil {
 		return emptyConsumption, err
 	}
@@ -77,7 +77,7 @@ func (a *app) getData(ctx context.Context, startDate string, first bool) (Consum
 	if err != nil || (resp != nil && resp.StatusCode == http.StatusFound) {
 		if first {
 			a.appendCookies(resp)
-			return a.getData(ctx, startDate, false)
+			return a.getDataFromLegacy(ctx, startDate, false)
 		}
 
 		if err == nil {
@@ -92,10 +92,10 @@ func (a *app) getData(ctx context.Context, startDate string, first bool) (Consum
 		return emptyConsumption, err
 	}
 
-	return parseResponse(startTime, payload)
+	return parseResponseFromLegacy(startTime, payload)
 }
 
-func parseResponse(startTime time.Time, payload []byte) (Consumption, error) {
+func parseResponseFromLegacy(startTime time.Time, payload []byte) (Consumption, error) {
 	var consumption Consumption
 	if err := json.Unmarshal(payload, &consumption); err != nil {
 		return emptyConsumption, err
