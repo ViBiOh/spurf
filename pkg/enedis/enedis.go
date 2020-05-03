@@ -134,7 +134,7 @@ func (a *app) fetch(ctx context.Context, date string) (Consumption, error) {
 
 func (a *app) save(ctx context.Context, data Consumption) (err error) {
 	var tx *sql.Tx
-	if tx, err = db.GetTx(a.db, nil); err != nil {
+	if tx, err = a.db.Begin(); err != nil {
 		return
 	}
 

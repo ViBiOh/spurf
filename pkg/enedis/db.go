@@ -5,8 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"time"
-
-	"github.com/ViBiOh/httputils/v3/pkg/db"
 )
 
 const lastFetch = `
@@ -39,18 +37,7 @@ func (a *app) saveValue(o *Value, tx *sql.Tx) (err error) {
 		return errors.New("cannot save nil Value")
 	}
 
-	var usedTx *sql.Tx
-	if usedTx, err = db.GetTx(a.db, tx); err != nil {
-		return
-	}
-
-	if usedTx != tx {
-		defer func() {
-			err = db.EndTx(usedTx, err)
-		}()
-	}
-
-	if _, err = usedTx.Exec(insertQuery, o.Timestamp, o.Valeur); err != nil {
+	if _, err = tx.Exec(insertQuery, o.Timestamp, o.Valeur); err != nil {
 		err = fmt.Errorf("unable to save %#v: %w", o, err)
 		return
 	}
