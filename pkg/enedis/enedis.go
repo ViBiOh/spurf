@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/ViBiOh/httputils/v3/pkg/cron"
-	"github.com/ViBiOh/httputils/v3/pkg/db"
 	"github.com/ViBiOh/httputils/v3/pkg/flags"
 	"github.com/ViBiOh/httputils/v3/pkg/logger"
 )
@@ -96,7 +95,9 @@ func (a *app) run(currentTime time.Time) error {
 		return err
 	}
 
-	lastTimestamp, err := a.getLastFetch()
+	ctx := context.Background()
+
+	lastTimestamp, err := a.getLastFetch(ctx)
 	if err == sql.ErrNoRows {
 		return nil
 	} else if err != nil {
@@ -112,13 +113,13 @@ func (a *app) run(currentTime time.Time) error {
 		date := lastSync.Format(isoDateFormat)
 
 		logger.Info("Fetching data for %s", date)
-		data, err := a.fetch(context.Background(), date)
+		data, err := a.fetch(ctx, date)
 		if err != nil {
 			return err
 		}
 
 		logger.Info("Saving data for %s", date)
-		if err := a.save(context.Background(), data); err != nil {
+		if err := a.save(ctx, data); err != nil {
 			return err
 		}
 
@@ -133,17 +134,17 @@ func (a *app) fetch(ctx context.Context, date string) (Consumption, error) {
 }
 
 func (a *app) save(ctx context.Context, data Consumption) (err error) {
-	var tx *sql.Tx
-	if tx, err = a.db.Begin(); err != nil {
+	ctx, err = StartAtomic(ctx, a.db)
+	if err != nil {
 		return
 	}
 
 	defer func() {
-		err = db.EndTx(tx, err)
+		err = EndAtomic(ctx, err)
 	}()
 
 	for _, value := range data.Graphe.Data {
-		if err = a.saveValue(value, tx); err != nil {
+		if err = a.saveValue(ctx, value); err != nil {
 			return
 		}
 	}

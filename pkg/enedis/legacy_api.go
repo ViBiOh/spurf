@@ -101,17 +101,21 @@ func parseResponseFromLegacy(startTime time.Time, payload []byte) (Consumption, 
 		return emptyConsumption, err
 	}
 
-	if consumption.Etat != nil && consumption.Etat.Valeur == "erreur" {
+	if consumption.Etat.Valeur == "erreur" {
 		return emptyConsumption, fmt.Errorf("API error: %s", consumption.Etat.ErreurText)
 	}
 
-	if consumption.Etat != nil && consumption.Etat.Valeur == "nonActive" {
+	if consumption.Etat.Valeur == "nonActive" {
 		return emptyConsumption, errors.New("Non active data")
 	}
 
-	for _, value := range consumption.Graphe.Data {
+	datas := make([]Value, len(consumption.Graphe.Data))
+	for index, value := range consumption.Graphe.Data {
 		value.Timestamp = startTime.Add(time.Duration(30*(value.Ordre-1)) * time.Minute).Unix()
+		datas[index] = value
 	}
+
+	consumption.Graphe.Data = datas
 
 	return consumption, nil
 }
