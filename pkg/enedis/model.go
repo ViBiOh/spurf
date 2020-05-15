@@ -6,8 +6,8 @@ var (
 
 // Consumption describes consumption response
 type Consumption struct {
-	Etat   *Etat
-	Graphe *Graphe
+	Etat   Etat
+	Graphe Graphe
 }
 
 // Etat describes status of output
@@ -18,7 +18,7 @@ type Etat struct {
 
 // Graphe describes graphical data point
 type Graphe struct {
-	Data []*Value
+	Data []Value
 }
 
 // Value describes data point

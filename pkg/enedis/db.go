@@ -1,11 +1,37 @@
 package enedis
 
 import (
+	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"time"
+
+	"github.com/ViBiOh/httputils/v3/pkg/db"
 )
+
+// StartAtomic starts atomic work
+func StartAtomic(ctx context.Context, usedDB *sql.DB) (context.Context, error) {
+	if db.ReadTx(ctx) != nil {
+		return ctx, nil
+	}
+
+	tx, err := usedDB.Begin()
+	if err != nil {
+		return ctx, err
+	}
+
+	return db.StoreTx(ctx, tx), nil
+}
+
+// EndAtomic ends atomic work
+func EndAtomic(ctx context.Context, err error) error {
+	tx := db.ReadTx(ctx)
+	if tx == nil {
+		return err
+	}
+
+	return db.EndTx(tx, err)
+}
 
 const lastFetch = `
 SELECT
@@ -14,8 +40,11 @@ FROM
   enedis_value;
 `
 
-func (a *app) getLastFetch() (lastTimestamp time.Time, err error) {
-	err = a.db.QueryRow(lastFetch).Scan(&lastTimestamp)
+func (a *app) getLastFetch(ctx context.Context) (lastTimestamp time.Time, err error) {
+	scanner := func(row db.RowScanner) error {
+		return row.Scan(&lastTimestamp)
+	}
+	err = db.GetRow(ctx, a.db, scanner, lastFetch)
 
 	return
 }
@@ -32,12 +61,9 @@ INSERT INTO
 );
 `
 
-func (a *app) saveValue(o *Value, tx *sql.Tx) (err error) {
-	if o == nil {
-		return errors.New("cannot save nil Value")
-	}
-
-	if _, err = tx.Exec(insertQuery, o.Timestamp, o.Valeur); err != nil {
+func (a *app) saveValue(ctx context.Context, o Value) (err error) {
+	err = db.Exec(ctx, a.db, insertQuery, o.Timestamp, o.Valeur)
+	if err != nil {
 		err = fmt.Errorf("unable to save %#v: %w", o, err)
 		return
 	}
