@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/ViBiOh/httputils/v3/pkg/cron"
+	"github.com/ViBiOh/httputils/v3/pkg/db"
 	"github.com/ViBiOh/httputils/v3/pkg/flags"
 	"github.com/ViBiOh/httputils/v3/pkg/logger"
 )
@@ -133,21 +134,14 @@ func (a *app) fetch(ctx context.Context, date string) (Consumption, error) {
 	return a.getDataFromLegacy(ctx, date, true)
 }
 
-func (a *app) save(ctx context.Context, data Consumption) (err error) {
-	ctx, err = StartAtomic(ctx, a.db)
-	if err != nil {
-		return
-	}
-
-	defer func() {
-		err = EndAtomic(ctx, err)
-	}()
-
-	for _, value := range data.Graphe.Data {
-		if err = a.saveValue(ctx, value); err != nil {
-			return
+func (a *app) save(ctx context.Context, data Consumption) error {
+	return db.DoAtomic(ctx, a.db, func(ctx context.Context) error {
+		for _, value := range data.Graphe.Data {
+			if err := a.saveValue(ctx, value); err != nil {
+				return err
+			}
 		}
-	}
 
-	return
+		return nil
+	})
 }
