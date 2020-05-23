@@ -2,6 +2,7 @@ package enedis
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -16,10 +17,10 @@ FROM
 `
 
 func (a *app) getLastFetch(ctx context.Context) (lastTimestamp time.Time, err error) {
-	scanner := func(row db.RowScanner) error {
+	scanner := func(row *sql.Row) error {
 		return row.Scan(&lastTimestamp)
 	}
-	err = db.GetRow(ctx, a.db, scanner, lastFetch)
+	err = db.Get(ctx, a.db, scanner, lastFetch)
 
 	return
 }
