@@ -13,7 +13,7 @@ const lastFetch = `
 SELECT
   MAX(ts)
 FROM
-  enedis_value;
+  spurf.enedis_value;
 `
 
 func (a *app) getLastFetch(ctx context.Context) (lastTimestamp time.Time, err error) {
@@ -27,7 +27,7 @@ func (a *app) getLastFetch(ctx context.Context) (lastTimestamp time.Time, err er
 
 const insertQuery = `
 INSERT INTO
-  enedis_value
+  spurf.enedis_value
 (
   ts,
   value
