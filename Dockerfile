@@ -1,4 +1,4 @@
-FROM scratch
+FROM vibioh/scratch
 
 ENV ZONEINFO zoneinfo.zip
 
