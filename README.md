@@ -26,8 +26,8 @@ Usage of spurf:
         [enedis] Start enedis as a cron {SPURF_ENEDIS_CRON}
   -enedisEmail string
         [enedis] Email {SPURF_ENEDIS_EMAIL}
-  -enedisLegacy
-        [enedis] Use legacy API {SPURF_ENEDIS_LEGACY} (default true)
+  -enedisName string
+        [enedis] Name {SPURF_ENEDIS_NAME} (default "home")
   -enedisPassword string
         [enedis] Password {SPURF_ENEDIS_PASSWORD}
   -enedisTimezone string
