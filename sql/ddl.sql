@@ -9,8 +9,9 @@ CREATE SCHEMA spurf;
 
 -- enedis_value
 CREATE TABLE spurf.enedis_value (
+  name TEXT NOT NULL,
   ts TIMESTAMP WITH TIME ZONE NOT NULL,
   value REAL NOT NULL
 );
 
-CREATE UNIQUE INDEX enedis_value_ts ON spurf.enedis_value(ts);
+CREATE UNIQUE INDEX enedis_value_ts ON spurf.enedis_value(name, ts);

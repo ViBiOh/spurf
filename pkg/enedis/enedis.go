@@ -29,15 +29,15 @@ type App interface {
 type Config struct {
 	email    *string
 	password *string
+	name     *string
 	timezone *string
-	legacy   *bool
 	cron     *bool
 }
 
 type app struct {
 	email    string
 	password string
-	legacy   bool
+	name     string
 	cron     bool
 	cookies  []*http.Cookie
 
@@ -50,8 +50,8 @@ func Flags(fs *flag.FlagSet, prefix string) Config {
 	return Config{
 		email:    flags.New(prefix, "enedis").Name("Email").Default("").Label("Email").ToString(fs),
 		password: flags.New(prefix, "enedis").Name("Password").Default("").Label("Password").ToString(fs),
+		name:     flags.New(prefix, "enedis").Name("Name").Default("home").Label("Name").ToString(fs),
 		timezone: flags.New(prefix, "enedis").Name("Timezone").Default("Europe/Paris").Label("Timezone").ToString(fs),
-		legacy:   flags.New(prefix, "enedis").Name("Legacy").Default(true).Label("Use legacy API").ToBool(fs),
 		cron:     flags.New(prefix, "enedis").Name("Cron").Default(false).Label("Start enedis as a cron").ToBool(fs),
 	}
 }
@@ -73,6 +73,7 @@ func New(config Config, db *sql.DB) (App, error) {
 	return &app{
 		email:    email,
 		password: password,
+		name:     strings.TrimSpace(*config.name),
 		location: location,
 		cron:     *config.cron,
 		db:       db,
