@@ -25,6 +25,8 @@ Usage of spurf:
         [enedis] Start enedis as a cron {SPURF_ENEDIS_CRON}
   -enedisEmail string
         [enedis] Email {SPURF_ENEDIS_EMAIL}
+  -enedisFile string
+        [enedis] CSV export to load {SPURF_ENEDIS_FILE}
   -enedisName string
         [enedis] Name {SPURF_ENEDIS_NAME} (default "home")
   -enedisPassword string
