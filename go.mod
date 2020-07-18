@@ -1,4 +1,4 @@
-module github.com/ViBiOh/spurf
+module github.com/ViBiOh/spurf/v2
 
 go 1.14
 
