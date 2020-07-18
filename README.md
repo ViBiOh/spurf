@@ -8,7 +8,6 @@
 
 ```bash
 Usage of spurf:
-  -c    Healthcheck (check and exit)
   -dbHost string
         [db] Host {SPURF_DB_HOST}
   -dbName string
@@ -21,16 +20,8 @@ Usage of spurf:
         [db] SSL Mode {SPURF_DB_SSLMODE} (default "disable")
   -dbUser string
         [db] User {SPURF_DB_USER}
-  -enedisCron
-        [enedis] Start enedis as a cron {SPURF_ENEDIS_CRON}
-  -enedisEmail string
-        [enedis] Email {SPURF_ENEDIS_EMAIL}
   -enedisFile string
         [enedis] CSV export to load {SPURF_ENEDIS_FILE}
   -enedisName string
         [enedis] Name {SPURF_ENEDIS_NAME} (default "home")
-  -enedisPassword string
-        [enedis] Password {SPURF_ENEDIS_PASSWORD}
-  -enedisTimezone string
-        [enedis] Timezone {SPURF_ENEDIS_TIMEZONE} (default "Europe/Paris")
 ```
