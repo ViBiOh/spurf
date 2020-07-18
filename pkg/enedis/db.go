@@ -3,7 +3,6 @@ package enedis
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"time"
 
 	"github.com/ViBiOh/httputils/v3/pkg/db"
@@ -18,7 +17,7 @@ WHERE
   name = $1;
 `
 
-func (a *app) getLastFetch(ctx context.Context) (lastTimestamp time.Time, err error) {
+func (a app) getLastFetch(ctx context.Context) (lastTimestamp time.Time, err error) {
 	scanner := func(row *sql.Row) error {
 		return row.Scan(&lastTimestamp)
 	}
@@ -27,26 +26,21 @@ func (a *app) getLastFetch(ctx context.Context) (lastTimestamp time.Time, err er
 	return
 }
 
-const insertQuery = `
-INSERT INTO
-  spurf.enedis_value
-(
-  name,
-  ts,
-  value
-) VALUES (
-  $1,
-  to_timestamp($2),
-  $3
-);
-`
+func (a app) save(ctx context.Context, datas []Value) error {
+	return db.DoAtomic(ctx, a.db, func(ctx context.Context) error {
+		var index int
+		feeder := func(stmt *sql.Stmt) error {
+			if index == len(datas) {
+				return db.ErrBulkEnded
+			}
 
-func (a *app) saveValue(ctx context.Context, o Value) (err error) {
-	err = db.Exec(ctx, insertQuery, a.name, o.Timestamp, o.Valeur)
-	if err != nil {
-		err = fmt.Errorf("unable to save %#v: %w", o, err)
-		return
-	}
+			data := datas[index]
+			index++
 
-	return
+			_, err := stmt.Exec(a.name, data.Timestamp, data.Valeur)
+			return err
+		}
+
+		return db.Bulk(ctx, feeder, "spurf", "enedis_value", "name", "ts", "value")
+	})
 }

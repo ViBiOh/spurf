@@ -12,14 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ViBiOh/httputils/v3/pkg/db"
 	"github.com/ViBiOh/httputils/v3/pkg/flags"
 	"github.com/ViBiOh/httputils/v3/pkg/logger"
-)
-
-const (
-	frenchDateFormat = "02/01/2006"
-	isoDateFormat    = "2006-01-02"
 )
 
 // App of package
@@ -102,18 +96,6 @@ func (a app) handleFile(filename string) error {
 	return nil
 }
 
-func (a app) save(ctx context.Context, datas []Value) error {
-	return db.DoAtomic(ctx, a.db, func(ctx context.Context) error {
-		for _, value := range datas {
-			if err := a.saveValue(ctx, value); err != nil {
-				return err
-			}
-		}
-
-		return nil
-	})
-}
-
 func handleLine(datas []Value, lastInsert time.Time, line string) []Value {
 	parts := strings.Split(line, ";")
 	if len(parts) != 2 {
@@ -140,6 +122,6 @@ func handleLine(datas []Value, lastInsert time.Time, line string) []Value {
 
 	return append(datas, Value{
 		Valeur:    value / 1000,
-		Timestamp: timestamp.Unix(),
+		Timestamp: parts[0],
 	})
 }
