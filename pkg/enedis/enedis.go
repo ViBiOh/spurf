@@ -16,6 +16,10 @@ import (
 	"github.com/ViBiOh/httputils/v3/pkg/logger"
 )
 
+const (
+	commitSize = 10000
+)
+
 // App of package
 type App interface {
 	Start()
@@ -82,15 +86,24 @@ func (a app) handleFile(filename string) error {
 	var datas []Value
 	for scanner.Scan() {
 		datas = handleLine(datas, lastInsert, strings.TrimSpace(scanner.Text()))
+
+		if len(datas) == commitSize {
+			if err := a.save(context.Background(), datas); err != nil {
+				return fmt.Errorf("error while saving intermediate datas: %s", err)
+			}
+
+			datas = nil
+		}
+	}
+
+	if len(datas) != 0 {
+		if err := a.save(context.Background(), datas); err != nil {
+			return fmt.Errorf("error while saving final datas: %s", err)
+		}
 	}
 
 	if err := scanner.Err(); err != nil {
 		return fmt.Errorf("error while checking scanner: %s", err)
-	}
-
-	logger.Info("Saving data for %s", filename)
-	if err := a.save(context.Background(), datas); err != nil {
-		return fmt.Errorf("error while saving datas: %s", err)
 	}
 
 	return nil
