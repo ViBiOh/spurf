@@ -1,7 +1,10 @@
 package enedis
 
-// Value describes data point
-type Value struct {
+var (
+	emptyValue = value{}
+)
+
+type value struct {
 	Valeur    float64
 	Timestamp string
 }
