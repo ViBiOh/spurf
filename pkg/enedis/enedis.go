@@ -82,6 +82,8 @@ func (a app) handleLines(scanner *bufio.Scanner) error {
 		return fmt.Errorf("unable to get last fetch: %s", err)
 	}
 
+	count := 0
+
 	feedLine := func(stmt *sql.Stmt) error {
 		if !scanner.Scan() {
 			return db.ErrBulkEnded
@@ -91,6 +93,8 @@ func (a app) handleLines(scanner *bufio.Scanner) error {
 		if value == emptyValue {
 			return nil
 		}
+
+		count++
 
 		_, err := stmt.Exec(a.name, value.Timestamp, value.Valeur)
 		return err
@@ -103,6 +107,8 @@ func (a app) handleLines(scanner *bufio.Scanner) error {
 	if err := scanner.Err(); err != nil {
 		return fmt.Errorf("error while reading line-by-line: %s", err)
 	}
+
+	logger.Info("%d lines inserted", count)
 
 	return nil
 }
