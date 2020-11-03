@@ -1,6 +1,6 @@
 # spurf
 
-[![Build Status](https://travis-ci.com/ViBiOh/spurf.svg?branch=master)](https://travis-ci.com/ViBiOh/spurf)
+[![Build](https://github.com/ViBiOh/spurf/workflows/Build/badge.svg)](https://github.com/ViBiOh/spurf/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ViBiOh/spurf)](https://goreportcard.com/report/github.com/ViBiOh/spurf)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ViBiOh_spurf&metric=alert_status)](https://sonarcloud.io/dashboard?id=ViBiOh_spurf)
 
