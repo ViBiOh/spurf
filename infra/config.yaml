@@ -1,0 +1,25 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: spurf
+  namespace: default
+spec:
+  interval: 120m
+  chart:
+    spec:
+      chart: postgres
+      version: "0.0.1"
+      sourceRef:
+        kind: HelmRepository
+        name: vibioh
+        namespace: flux-system
+      interval: 120m
+
+  values:
+    nameOverride: spurf-db
+    config:
+      POSTGRES_USER: spurf
+      POSTGRES_DB: spurf
+    secrets:
+      POSTGRES_PASSWORD: AgCHDrOwQD70BVK6dOz+l9TCd18T+LqB0hwT13RVuXf+AON7KH4dfgHqioidAvaaj26HTqkluAXeQHcLeR9ZdFXnqDmvIEF85S+yj6BJwmLquwy43Z7hYon/CUxpFVZMtIaarKpVsQfiNf3eaF6wGD2lQsxQbaRZUW4hAsUmjXJyNWTfvNx+zSEQHG/EPVlHwMFc9lz6Op1lCcGi50LAepFwQezatHm8WvaE663T4KkA/7MBfV1c/quR0LhuW9yWQOcdSaz3OX5DYkGeAQZgl2GM03C3U5nvxXgzHYcBM3U1CgOPTKi/EwxEVVKYZIWZTgHdvDoQDrJfhQmHnOa2BCGMpQi8fIHFj/GuJU/FJO011leMtiTPjv/XIQWRV3KjU+ox8lJpXEmUe9PbBdAr1b7KRcNCC3GpS/w8b0VnLdBMoRbALqOu9MVGv3xvM6iy1kxuW1vnWScbXwMe7mNFLrRtqff+IXEyh875CfYPqi05klAE/N5ddrwdTbq2O5OHWQj3iIDLiJ4hEcVzUuubrRoCz9SZOssdDnZ8eJQ74vtc5EL1S4PPiq1aD+UwRbggqWFATVUK+8a/xyfx0sqjcTIEEeIWna7hL3RHc35imqBjmOkIxBDVQbFLsGrpzFxhCId8cCsWemooT0XxNHlg3dckvelvHlzeuHzNTI6mFzRbn5i9OBwmnZ/E6Bj5g989RZ99EjgQTpOgrWPUKLdSRPmTYVOL65ZPngC6FBBBairjBPY9JYzenjqrFfZjYVimqEa6xfSGAmmB4bghGY0=
