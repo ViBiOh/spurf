@@ -5,6 +5,6 @@ var (
 )
 
 type value struct {
-	Valeur    float64
 	Timestamp string
+	Valeur    float64
 }

@@ -29,10 +29,10 @@ type Config struct {
 }
 
 type app struct {
+	db *sql.DB
+
 	file string
 	name string
-
-	db *sql.DB
 }
 
 // Flags adds flags for configuring package
