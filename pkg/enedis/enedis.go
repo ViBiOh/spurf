@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ViBiOh/httputils/v3/pkg/db"
-	"github.com/ViBiOh/httputils/v3/pkg/flags"
-	"github.com/ViBiOh/httputils/v3/pkg/logger"
+	"github.com/ViBiOh/httputils/v4/pkg/db"
+	"github.com/ViBiOh/httputils/v4/pkg/flags"
+	"github.com/ViBiOh/httputils/v4/pkg/logger"
 )
 
 // App of package

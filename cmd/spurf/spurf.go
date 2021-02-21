@@ -4,8 +4,8 @@ import (
 	"flag"
 	"os"
 
-	"github.com/ViBiOh/httputils/v3/pkg/db"
-	"github.com/ViBiOh/httputils/v3/pkg/logger"
+	"github.com/ViBiOh/httputils/v4/pkg/db"
+	"github.com/ViBiOh/httputils/v4/pkg/logger"
 	"github.com/ViBiOh/spurf/v2/pkg/enedis"
 )
 
