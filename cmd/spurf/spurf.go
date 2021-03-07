@@ -14,8 +14,12 @@ func main() {
 
 	dbConfig := db.Flags(fs, "db")
 	enedisConfig := enedis.Flags(fs, "enedis")
+	loggerConfig := logger.Flags(fs, "logger")
 
 	logger.Fatal(fs.Parse(os.Args[1:]))
+
+	logger.Global(logger.New(loggerConfig))
+	defer logger.Close()
 
 	spurfDb, err := db.New(dbConfig)
 	logger.Fatal(err)

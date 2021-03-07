@@ -24,4 +24,14 @@ Usage of spurf:
         [enedis] CSV export to load {SPURF_ENEDIS_FILE}
   -enedisName string
         [enedis] Name {SPURF_ENEDIS_NAME} (default "home")
+  -loggerJson
+        [logger] Log format as JSON {SPURF_LOGGER_JSON}
+  -loggerLevel string
+        [logger] Logger level {SPURF_LOGGER_LEVEL} (default "INFO")
+  -loggerLevelKey string
+        [logger] Key for level in JSON {SPURF_LOGGER_LEVEL_KEY} (default "level")
+  -loggerMessageKey string
+        [logger] Key for message in JSON {SPURF_LOGGER_MESSAGE_KEY} (default "message")
+  -loggerTimeKey string
+        [logger] Key for timestamp in JSON {SPURF_LOGGER_TIME_KEY} (default "time")
 ```
