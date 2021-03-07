@@ -2,20 +2,19 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: spurf-db
+  name: spurf
   namespace: default
 spec:
   interval: 120m
   chart:
     spec:
-      chart: postgres
-      version: '0.0.19'
+      chart: app
+      version: "0.0.49"
       sourceRef:
         kind: HelmRepository
         name: vibioh
         namespace: default
       interval: 120m
-
   install:
     skipCRDs: true
   maxHistory: 3
@@ -24,7 +23,56 @@ spec:
       retries: 3
   rollback:
     cleanupOnFail: true
+  values:
+    nameOverride: spurf
+    image:
+      name: vibioh/spurf
+      tag: de4a52c # {"$imagepolicy": "default:flux-spurf-api:tag"}
+    service: false
+    port: 0
+    livenessProbePath: false
+    readinessProbePath: false
+    config:
+      SPURF_LOGGER_JSON: "true"
+      SPURF_ENEDIS_NAME: "sandbox"
+      SPURF_DATAHUB_SANDBOX: "sandbox"
+      SPURF_DB_HOST: spurf-db
+      SPURF_DB_PORT: "80"
+      SPURF_DB_NAME: spurf
+      SPURF_DB_USER: spurf
+    secrets:
+      SPURF_DATAHUB_USAGE_POINT_ID: AgDfA+rfw7A+gAcvME+/lhsotLOQ/ALBeadoibCoNtO8WEKp+iSKK4TgU+x/gUrpFuCl2br/S7zGUZ2SwwbYKd3120lUjGeCr0dVnIHeXEor8BW1J5WgYO1AeMyuCGP9DdACQNKXzcshao2yUMLsCITgMUmJEHhFkvpnBZCAWeu3tW+fDV4tDhCG/p8EczZzsmBtHXnPDt8a0ledBPVDwofIMnzq9Lv7cx0+243P29iRoI5EmR2UKYoQAjEhCIt6mnkkMj0+K32YMBMu7nJtHA3BKF3UO/Zs/rN6+1f3WnBb/s5/TSyjgMkS0SrT/TvO1kkcmnk+Y8C0FC4KivBz8+2JHp3EynKjknnqC5T/xiK6JSo4r8JIT1cXLwxZCHEr6/LPyKajGbwv2SbvIF7q7BX7NWe+wsgdJ4DmGytX4t7Li1dntUZV0WxaCAIRP3B+4MEZ78CIn3SOyxcEKZkty1hRHqnEVURZAmlbd7RNFSyhjOQfa95QMsJQXHb2qmgGBNo8zGsUaY6tAy91uQcpCaL/VgU3wi3pT0Fl3Pj7152KY3XB2hIwUza9EFFx0V0uQaKzYAB3huS/mON6dEmH3YX6P5pk1nSnFnKRncP0pc12o92Qppz7ZWyRsAXyooeQc31QcJMDnibxYj/fnyt2v1zT7b+uF2y5Qb13oSpYu4F5ED3EIOWeA3YfcnYQ7JRq1Nj5O1zR+x7RyhlNRRmAyA==
+      SPURF_DATAHUB_CLIENT_ID: AgBYntB5Z8SP2oh4qHKzKkkwE/4CZTgJgY/+4blnMuozNN7C2wXCIY//BoF32LAK2I2wkZOZHuBzIpPYtv4lpMmOX4mjpcuydq9sxazJaB0I8aagwsOc+7gKBDYU0pKeq/GC+Eitp8Raw527KngBIUAffhTGjbJE6Nbw/dWdSKQtFZRyMTFa1nEkc2wNyD2JEfmfIIoBqszmpb7pUAdTuAOLIF0+W7B/Ycxc815tKN/NQjg96eKTjLt0ckSW6sDKLcnPyvdlcMmvoQowufhTphL97rVcrVSp9l8ErJ7xarKFBpN02ahLxt+il3IIkv/1kAcZpYSz37Vi4FVAYfPjjIsrjPM7YIUNT6p3dA7/aLkAs3XFw2UXmid1MpG5ayoLLbnOgCqImjrOdwZ3GHgVWufIs4CVjo6jD8PZgVMDr6mD2WB2uXd+K0nzzmKHyQ8FXMyLldsrsgR2Yxq0/1FFrsihuybclTj8H3yvHgNYc18ttIXepI3E8GkbxFN8MSf/nRQpx7RdJtLUpAn5iVPje6QnOjsJ2gogubfIE8quAfCA7tHCl4dOikpqX7YI835+mq12DTqapav70PwX3bn2CM515Xh+mnsdfo5CeZrRQSCi9PR0swtkrTY8McsS+MPnx8xZKw55YcyTrVJvA6+EZ1bnWp9ogzdeaTZFdxqsdaceoKPpTDcSeFF7/36R8UDT73pVo4M4Ksz94SpdAC09GIARUWxGwQplZnk9E1Ro/X7K6PElj5M=
+      SPURF_DATAHUB_CLIENT_SECRET: AgCALD4iFRPsbo79SGQe1Nuw421ezWM0ujzMI2+bpu7xe/BMnq6J3uO4gO8i+9kuigf36yVuP5bJaGCbeKIJc1HZJI8bz4iv0FDBCp5fipqjEbc4aEb9PCEN54cD6rHzfD+CaOtFMRi2/WVDr+uP7J+haQrluab3PcbrB6JY507m3wVnMb3GCfJl+I3V4QteJEUixeRNwtR5sfgFT8kUFfO3pLuvFo4knM49tqr3PwN0A+2+ccuZVf6/4QWotxL2w8uEz312cE1TYgV6RiTxsVR9XweugTmLteWVXZDI6lQxtZgzvRUAmizonlqQov8y5nUSFODOVrmJ7rLotMIUBYyamazEPCmjzZyDCgyVEfsA19jyBnOAvosMxAcDXXFLq9p4A/os8AsslTpE1PkslAhMcqnR5v7a/E0Za9yDuTpa0HZtLL69gWfB8AaswdTQgMbmtQeppJJE1YSxgbmkSetCgHaALVvoGvqI/F5R31+/syjUcP5BFKG6W15O4KBcOkx098T8u8Rs0tyBhhTqSwYZ1eU9HQRJCESnVOI3j2zrm1KxPAiGr84JvORsJS0+Wheaby4d45YnJMBbS8nMZrbBFU4QVvMpG8GkpTNXig1pfqjp8C0Cluzl0EsC7hAjILss1vHk0xhWVwRN2O3Q8xkF3TcVUwOE8ZbLlbbARSKHbUklpp83Ir85gM6XgPd+OkjCnuAiutLk0Xdyl2FgKS/pwD6BjiNfTxHd+AVIXyPkSKEQt7Y=
+      SPURF_DATAHUB_ACCESS_TOKEN: AgB1pDrXakd/VB88idlENsuOvs4cO1E6T3gfnfeO2bc22KVXFyg7zzv7nc8o7z89cMe0OLRwTVJTxtIVK9rDJYlVlzgCN6rt5ovyXvSFQtQHG/bo3X/iZT2WBYBpoBZZK2XD0qJwjrsic0fTFyGAZGMdNvmCm9FRqkfnnX9BuLH5n2fG7NoIsExNoWWh4UCeUv6q1YxS+0vwF2WXnNZI8/BaXLHvJwMfh7vKYIjZsHUmwXObnvDmzVzSii71AQAQit6sOayZMMhI1B+ZN8Dn55nzh8lVnTYs3APZ3yUVSi7z2G2wRaVIqQWUXFNLI5uuiVVnulL5p5nCUn58XdHDZHY4oKGYklszQVrAYyeCeKHNzKv/kmasp3k3T7+Sq89R0djRi68f5Ku2PwlmzWtycxNG+rB8AiUH13LO9/UiU8MrcaIRp+2g+lBY0LLaif/3ZSK5bv9o6rjXdnojKlvErgn+43ZmqQQwH4XEvC7g9k4M15q7WCPvFKSAlwhJvMY7rUGNpLw5xflzpS+H9AIP5071BiJCQjws0h1Wc0L23+HAzLoW8eNu+TMomIHUE+1mhruIiaO7dxV9SCJ06sTGM5DNwppr74KJoXvtcxfvNcVuA182t/6xnp0ekNSlzvUlikSQd0VKr/wUaWW83cKYHBzlZAIIvJX7ZRNcVQv0jQ3FFHM8KYEd/HtW02sacGJt4e9VH9BzZErZ5qdl8JWqO792cAiQaddWsvL96Z2ZQxvbsbgloQFp0Y3Rv2tHT/Lw7jlb1vACanQ=
+      SPURF_DATAHUB_REFRESH_TOKEN: AgC8vvoFfkAbx655vSvTUKqd5+sGKwRSem+48ozeGL2Px825E1mEEVzq2UJtXsKpjCtg6FLE3zxMl3HhbsMPR4KrTwK4RqglCOcANwJoVStfrCdXXCYfh+OBA5ZpINeYDhEvTryJcDVoPejbw/zB6nSkNV7/Aca/cxUD3U8t5uLpsvH3oYYMg2RNDs3q9J7o6hhsjM/Fi0NSu7q1p78QyuOno8h8CQTwPQLboe32yx/1t1da5FfSqvBA09jV6G7XlsAD51EBmnMHbejL5uuOHXkwAK2G8ZdsPhFXIx72VZa4p5j+8ox6aazlvjZXXAQSAOWIncBFyw0w+ZFQzIDH5OJpIz9I/U6HKn/iBR4yIeohuSfTftDN9TD23DpH0WSrj2rD1L3P4x22jvHzAMXQzYVUF7DhjXWwtEZNbfU5rSHrbkzKQZdkHDJBt2Li7l8Rhf2/BlEJ+GrGNBIRO0IyDvhk3cN+8jfz5KQqZJ/jGrYldSYGpyNGf8wzdK7VaKaQKLLz27GVnYneeOL/2T0LSbQa6Uuio/B70qJRSXFmGQuqLcXZb25PBM3t4ZHukIDVxyZ429WD8aFXkmj7CUGq2xisBs4gaWCBP/8hjHNP+Q32wokrhj7rAtRgblotxzD6Huz12VlyiyUb8UBdvacZZaullke9LiKL9V35U8vK5gJOHHYdQAHbzhFG0rQIi5O77AQw7w6dJ63nxf/zXwiUz8hzc1lwRrUdPFJ21xwaRTXmFYfzqzfZAFjYTmfZDtD5
+      SPURF_DB_PASS: AgCd2ffLCbeR7gbe+wL5/NvcJ/MENHndRvPj7Akw3SJItETHxTDh2zSeH6rahuAlynLRYtxDAOAYy+Drxmp0gdwMFhlA5sdC5DAe2bgNAjON13gq7QcZGaL3yhuInVwGJyI5qFdFYO6JZJ4POV9XhXx7sbhfSTOrD2F4EDpoDEfupePeb1BSr3izT4lc1tptNdxPeyqJ60/XcZyx2WLzPeLWLkmsEXQMABi8kCSnGowcLLGmnas8iAGAqqUc5f3n2r2JhfNu4/o824hff65jbmFWxmU+OcWvPgQCZnvc8LjBqH4JGiuVFIaT93jcbihZv8cPMxMqdmoib72VlgdwHgBTyaW4danc14nlfDQD2EcFRzhaAW3h4SPWV+EYlrIIRyauV+xdpVPENlZ8ry6jUntXdPSyDeEoYC1vysXtT49d6Op0kJkO7ZTySxoY1HsGcfJzC+YkzTTYV4UzsPQIaOVtrvoPoOJn9HTwnpqRh9t5JfVlth6ReVFwpoIDvArcr5MUYCV3s2JEcFq3oaHwILJS+x3V0x8VvPlgNDI9bFEFSUJPk1zVnibp6gD0M+psdulsOi7mYWXG6woLVRj+Y6BJueAFCyG+uHgc2ZBu7v9yB6WSzHWxpUZNLRu2DAQeN5+VQoFzg3U5J257z7mQ4uxBvC3MimLt+bDnP79FzTBj7eJAhSK2mNJ5V+4/wALrhkeVJM5nC9kAytANuFbLSc9LfaHTZhi7fsvklCHkTKblmWozt2QoVqPw9qgRfi5XMounlryPvkJR0oRSGr8=
 
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: spurf-db
+  namespace: default
+spec:
+  interval: 120m
+  chart:
+    spec:
+      chart: postgres
+      version: "0.0.19"
+      sourceRef:
+        kind: HelmRepository
+        name: vibioh
+        namespace: default
+      interval: 120m
+  install:
+    skipCRDs: true
+  maxHistory: 3
+  upgrade:
+    remediation:
+      retries: 3
+  rollback:
+    cleanupOnFail: true
   values:
     nameOverride: spurf-db
     config:

@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+set -o nounset -o pipefail -o errexit
+
+main() {
+  local SCRIPT_DIR
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+  source "${SCRIPT_DIR}/scripts/meta" && meta_init "var" "http"
+
+  local AUTHORIZE_URL="https://gw.hml.api.enedis.fr"
+  local TOKEN_URL="https://gw.hml.api.enedis.fr"
+  if var_confirm "Production"; then
+    AUTHORIZE_URL="https://mon-compte-particulier.enedis.fr"
+    TOKEN_URL="https://gw.prd.api.enedis.fr"
+  fi
+
+  var_read CLIENT_ID
+  var_read CLIENT_SECRET "" "secret"
+
+  local REDIRECT_URI="https://api.vibioh.fr/dump/"
+
+  open "${AUTHORIZE_URL}/dataconnect/v1/oauth2/authorize?client_id=${CLIENT_ID}&response_type=code&duration=P3M"
+
+  var_read CODE_FROM_AUTHORIZE "" "secret"
+
+  http_init_client
+
+  http_request "${TOKEN_URL}/v1/oauth2/token?redirect_uri=$(http_urlencode "${REDIRECT_URI}")" \
+    --data "client_id=${CLIENT_ID}" \
+    --data "client_secret=${CLIENT_SECRET}" \
+    --data "grant_type=authorization_code" \
+    --data "code=${CODE_FROM_AUTHORIZE}"
+
+  if [[ ${HTTP_STATUS} != "200" ]]; then
+    http_handle_error "Unable to retrieve token"
+    return 1
+  fi
+
+  cat "${HTTP_OUTPUT}"
+  rm "${HTTP_OUTPUT}"
+}
+
+main "${@}"
