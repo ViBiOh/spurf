@@ -26,7 +26,7 @@ spec:
     nameOverride: spurf
     image:
       name: vibioh/spurf
-      tag: "202103082058" # {"$imagepolicy": "default:flux-spurf-api:tag"}
+      tag: "202103082106" # {"$imagepolicy": "default:flux-spurf-api:tag"}
     service: false
     port: 0
     livenessProbePath: false
