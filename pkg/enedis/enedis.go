@@ -40,7 +40,7 @@ type app struct {
 func Flags(fs *flag.FlagSet, prefix string) Config {
 	return Config{
 		name: flags.New(prefix, "enedis").Name("Name").Default("home").Label("Name").ToString(fs),
-		tz:   flags.New(prefix, "enedis").Name("Timezone").Default("Europe/paris").Label("Timezone").ToString(fs),
+		tz:   flags.New(prefix, "enedis").Name("Timezone").Default("Europe/Paris").Label("Timezone").ToString(fs),
 	}
 }
 

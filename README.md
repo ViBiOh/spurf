@@ -37,7 +37,7 @@ Usage of spurf:
   -enedisName string
         [enedis] Name {SPURF_ENEDIS_NAME} (default "home")
   -enedisTimezone string
-        [enedis] Timezone {SPURF_ENEDIS_TIMEZONE} (default "Europe/paris")
+        [enedis] Timezone {SPURF_ENEDIS_TIMEZONE} (default "Europe/Paris")
   -graceDuration string
         [http] Grace duration when SIGTERM received {SPURF_GRACE_DURATION} (default "30s")
   -loggerJson
