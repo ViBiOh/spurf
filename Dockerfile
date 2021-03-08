@@ -1,6 +1,5 @@
 FROM vibioh/scratch
 
-HEALTHCHECK --retries=10 CMD [ "/spurf", "-c" ]
 ENTRYPOINT [ "/spurf" ]
 
 ARG VERSION
