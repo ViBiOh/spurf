@@ -27,7 +27,7 @@ spec:
     schedule: "0 8 * * *"
     image:
       name: vibioh/spurf
-      tag: "202103090858" # {"$imagepolicy": "default:flux-spurf-api:tag"}
+      tag: "202103090939" # {"$imagepolicy": "default:flux-spurf-api:tag"}
     config:
       SPURF_LOGGER_JSON: "true"
       SPURF_ENEDIS_NAME: "sandbox"
