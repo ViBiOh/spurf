@@ -30,5 +30,5 @@ func main() {
 	enedisApp, err := enedis.New(enedisConfig, spurfDb, datahub.New(datahubConfig))
 	logger.Fatal(err)
 
-	enedisApp.Start()
+	logger.Fatal(enedisApp.Start())
 }

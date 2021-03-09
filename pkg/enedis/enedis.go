@@ -17,7 +17,7 @@ import (
 
 // App of package
 type App interface {
-	Start()
+	Start() error
 }
 
 // Config of package
@@ -59,25 +59,24 @@ func New(config Config, db *sql.DB, datahubApp datahub.App) (App, error) {
 }
 
 // Start the package
-func (a app) Start() {
+func (a app) Start() error {
 	ctx := context.Background()
 
 	lastInsert, err := a.getLastFetch(ctx)
 	if err != nil {
-		logger.Error("unable to get last fetch: %s", err)
-		return
+		return fmt.Errorf("unable to get last fetch: %s", err)
 	}
 
 	consumption, err := a.datahubApp.GetConsumption(ctx, lastInsert, time.Now())
 	if err != nil {
-		logger.Error("unable to get enedis consumption: %s", err)
-		return
+		return fmt.Errorf("unable to get enedis consumption: %s", err)
 	}
 
 	if err := a.update(ctx, lastInsert, consumption); err != nil {
-		logger.Error("unable to update spurf: %s", err)
-		return
+		return fmt.Errorf("unable to update spurf: %s", err)
 	}
+
+	return nil
 }
 
 func (a app) update(ctx context.Context, lastInsert time.Time, consumption datahub.Consumption) error {
