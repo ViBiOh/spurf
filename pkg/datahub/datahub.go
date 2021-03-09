@@ -121,6 +121,10 @@ func (a *app) prepareRequest(lastInsert time.Time, now time.Time) *request.Reque
 		usedNow = usedLast.Add(time.Hour * 24 * 6)
 	}
 
+	if usedNow.After(lastInsert) {
+		return nil
+	}
+
 	req.Get(fmt.Sprintf("%s/v4/metering_data/consumption_load_curve?usage_point_id=%s&start=%s&end=%s", a.GetURL(), url.QueryEscape(a.usagePointID), usedLast.Format(isoDateLayout), usedNow.Format(isoDateLayout)))
 
 	return req
@@ -130,6 +134,9 @@ func (a *app) GetConsumption(ctx context.Context, lastInsert time.Time, now time
 	var payload Consumption
 
 	req := a.prepareRequest(lastInsert, now)
+	if req == nil {
+		return payload, nil
+	}
 
 	resp, err := req.Send(ctx, nil)
 	if err != nil && resp.StatusCode == http.StatusForbidden {
@@ -159,7 +166,7 @@ func (a *app) GetConsumption(ctx context.Context, lastInsert time.Time, now time
 func (a *app) RefreshToken(ctx context.Context) error {
 	req := request.New()
 
-	req.URL(fmt.Sprintf("%s/v1/oauth2/token?redirect_uri=%s", a.GetURL(), url.QueryEscape(a.redirectURI)))
+	req.Post(fmt.Sprintf("%s/v1/oauth2/token?redirect_uri=%s", a.GetURL(), url.QueryEscape(a.redirectURI)))
 
 	values := url.Values{}
 	values.Set("client_id", a.clientID)
