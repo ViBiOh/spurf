@@ -38,8 +38,6 @@ Usage of spurf:
         [enedis] Name {SPURF_ENEDIS_NAME} (default "home")
   -enedisTimezone string
         [enedis] Timezone {SPURF_ENEDIS_TIMEZONE} (default "Europe/Paris")
-  -graceDuration string
-        [http] Grace duration when SIGTERM received {SPURF_GRACE_DURATION} (default "30s")
   -loggerJson
         [logger] Log format as JSON {SPURF_LOGGER_JSON}
   -loggerLevel string
@@ -50,28 +48,4 @@ Usage of spurf:
         [logger] Key for message in JSON {SPURF_LOGGER_MESSAGE_KEY} (default "message")
   -loggerTimeKey string
         [logger] Key for timestamp in JSON {SPURF_LOGGER_TIME_KEY} (default "time")
-  -okStatus int
-        [http] Healthy HTTP Status code {SPURF_OK_STATUS} (default 204)
-  -prometheusAddress string
-        [prometheus] Listen address {SPURF_PROMETHEUS_ADDRESS}
-  -prometheusCert string
-        [prometheus] Certificate file {SPURF_PROMETHEUS_CERT}
-  -prometheusIdleTimeout string
-        [prometheus] Idle Timeout {SPURF_PROMETHEUS_IDLE_TIMEOUT} (default "10s")
-  -prometheusIgnore string
-        [prometheus] Ignored path prefixes for metrics, comma separated {SPURF_PROMETHEUS_IGNORE}
-  -prometheusKey string
-        [prometheus] Key file {SPURF_PROMETHEUS_KEY}
-  -prometheusPort uint
-        [prometheus] Listen port {SPURF_PROMETHEUS_PORT} (default 9090)
-  -prometheusReadTimeout string
-        [prometheus] Read Timeout {SPURF_PROMETHEUS_READ_TIMEOUT} (default "5s")
-  -prometheusShutdownTimeout string
-        [prometheus] Shutdown Timeout {SPURF_PROMETHEUS_SHUTDOWN_TIMEOUT} (default "5s")
-  -prometheusWriteTimeout string
-        [prometheus] Write Timeout {SPURF_PROMETHEUS_WRITE_TIMEOUT} (default "10s")
-  -url string
-        [alcotest] URL to check {SPURF_URL}
-  -userAgent string
-        [alcotest] User-Agent for check {SPURF_USER_AGENT} (default "Alcotest")
 ```

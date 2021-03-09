@@ -7,10 +7,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"syscall"
 	"time"
 
-	"github.com/ViBiOh/httputils/v4/pkg/cron"
 	"github.com/ViBiOh/httputils/v4/pkg/db"
 	"github.com/ViBiOh/httputils/v4/pkg/flags"
 	"github.com/ViBiOh/httputils/v4/pkg/logger"
@@ -19,7 +17,7 @@ import (
 
 // App of package
 type App interface {
-	Start(<-chan struct{})
+	Start()
 }
 
 // Config of package
@@ -61,28 +59,25 @@ func New(config Config, db *sql.DB, datahubApp datahub.App) (App, error) {
 }
 
 // Start the package
-func (a app) Start(done <-chan struct{}) {
-	feeder := cron.New().Days().In(a.tz.String()).OnError(func(err error) {
-		logger.Error("unable to feed spurf: %s", err)
-	}).OnSignal(syscall.SIGUSR1)
+func (a app) Start() {
+	ctx := context.Background()
 
-	logger.Info("Feeding spurf database %s", feeder)
+	lastInsert, err := a.getLastFetch(ctx)
+	if err != nil {
+		logger.Error("unable to get last fetch: %s", err)
+		return
+	}
 
-	feeder.Start(func(now time.Time) error {
-		ctx := context.Background()
+	consumption, err := a.datahubApp.GetConsumption(ctx, lastInsert, time.Now())
+	if err != nil {
+		logger.Error("unable to get enedis consumption: %s", err)
+		return
+	}
 
-		lastInsert, err := a.getLastFetch(ctx)
-		if err != nil {
-			return fmt.Errorf("unable to get last fetch: %s", err)
-		}
-
-		consumption, err := a.datahubApp.GetConsumption(ctx, lastInsert, now)
-		if err != nil {
-			return fmt.Errorf("unable to get enedis consumption: %s", err)
-		}
-
-		return a.update(ctx, lastInsert, consumption)
-	}, done)
+	if err := a.update(ctx, lastInsert, consumption); err != nil {
+		logger.Error("unable to update spurf: %s", err)
+		return
+	}
 }
 
 func (a app) update(ctx context.Context, lastInsert time.Time, consumption datahub.Consumption) error {

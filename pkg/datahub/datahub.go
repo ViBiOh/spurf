@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"net/http"
 	"net/url"
 	"strings"
 	"sync"
@@ -106,9 +107,7 @@ func (a *app) GetURL() string {
 	return productionTokenURL
 }
 
-func (a *app) GetConsumption(ctx context.Context, lastInsert time.Time, now time.Time) (Consumption, error) {
-	var payload Consumption
-
+func (a *app) prepareRequest(lastInsert time.Time, now time.Time) *request.Request {
 	req := request.New()
 
 	a.mutex.RLock()
@@ -124,7 +123,23 @@ func (a *app) GetConsumption(ctx context.Context, lastInsert time.Time, now time
 
 	req.Get(fmt.Sprintf("%s/v4/metering_data/consumption_load_curve?usage_point_id=%s&start=%s&end=%s", a.GetURL(), url.QueryEscape(a.usagePointID), usedLast.Format(isoDateLayout), usedNow.Format(isoDateLayout)))
 
+	return req
+}
+
+func (a *app) GetConsumption(ctx context.Context, lastInsert time.Time, now time.Time) (Consumption, error) {
+	var payload Consumption
+
+	req := a.prepareRequest(lastInsert, now)
+
 	resp, err := req.Send(ctx, nil)
+	if err != nil && resp.StatusCode == http.StatusForbidden {
+		if err := a.RefreshToken(ctx); err != nil {
+			return payload, fmt.Errorf("unable to refresh token: %s", err)
+		}
+
+		resp, err = a.prepareRequest(lastInsert, now).Send(ctx, nil)
+	}
+
 	if err != nil {
 		return payload, fmt.Errorf("unable to get data: %s", err)
 	}
