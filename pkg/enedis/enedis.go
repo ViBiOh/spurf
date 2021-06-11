@@ -29,7 +29,7 @@ type Config struct {
 }
 
 type app struct {
-	db *sql.DB
+	db db.App
 
 	file string
 	name string
@@ -44,7 +44,7 @@ func Flags(fs *flag.FlagSet, prefix string) Config {
 }
 
 // New creates new App from Config
-func New(config Config, db *sql.DB) App {
+func New(config Config, db db.App) App {
 	return &app{
 		file: strings.TrimSpace(*config.file),
 		name: strings.TrimSpace(*config.name),

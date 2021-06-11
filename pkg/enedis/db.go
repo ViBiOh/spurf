@@ -4,8 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"time"
-
-	"github.com/ViBiOh/httputils/v4/pkg/db"
 )
 
 const lastFetch = `
@@ -24,11 +22,11 @@ func (a app) getLastFetch(ctx context.Context) (time.Time, error) {
 		return row.Scan(&output)
 	}
 
-	return output, db.Get(ctx, a.db, scanner, lastFetch, a.name)
+	return output, a.db.Get(ctx, scanner, lastFetch, a.name)
 }
 
 func (a app) save(ctx context.Context, feeder func(stmt *sql.Stmt) error) error {
-	return db.DoAtomic(ctx, a.db, func(ctx context.Context) error {
-		return db.Bulk(ctx, feeder, "spurf", "enedis_value", "name", "ts", "value")
+	return a.db.DoAtomic(ctx, func(ctx context.Context) error {
+		return a.db.Bulk(ctx, feeder, "spurf", "enedis_value", "name", "ts", "value")
 	})
 }
