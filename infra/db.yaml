@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: postgres
-      version: '0.0.28'
+      version: "0.0.28"
       sourceRef:
         kind: HelmRepository
         name: vibioh
@@ -27,6 +27,8 @@ spec:
 
   values:
     nameOverride: spurf-db
+    persistentvolume:
+      storageClassName: ""
     config:
       POSTGRES_USER: spurf
       POSTGRES_DB: spurf
