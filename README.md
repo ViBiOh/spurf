@@ -9,6 +9,8 @@
 Usage of spurf:
   -dbHost string
         [db] Host {SPURF_DB_HOST}
+  -dbMaxConn uint
+        [db] Max Open Connections {SPURF_DB_MAX_CONN} (default 5)
   -dbName string
         [db] Name {SPURF_DB_NAME}
   -dbPass string
@@ -17,6 +19,8 @@ Usage of spurf:
         [db] Port {SPURF_DB_PORT} (default 5432)
   -dbSslmode string
         [db] SSL Mode {SPURF_DB_SSLMODE} (default "disable")
+  -dbTimeout uint
+        [db] Connect timeout {SPURF_DB_TIMEOUT} (default 10)
   -dbUser string
         [db] User {SPURF_DB_USER}
   -enedisFile string
