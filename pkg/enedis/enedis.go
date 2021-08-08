@@ -18,21 +18,17 @@ import (
 )
 
 // App of package
-type App interface {
-	Start()
+type App struct {
+	db db.App
+
+	file string
+	name string
 }
 
 // Config of package
 type Config struct {
 	file *string
 	name *string
-}
-
-type app struct {
-	db db.App
-
-	file string
-	name string
 }
 
 // Flags adds flags for configuring package
@@ -45,7 +41,7 @@ func Flags(fs *flag.FlagSet, prefix string) Config {
 
 // New creates new App from Config
 func New(config Config, db db.App) App {
-	return &app{
+	return App{
 		file: strings.TrimSpace(*config.file),
 		name: strings.TrimSpace(*config.name),
 		db:   db,
@@ -53,11 +49,11 @@ func New(config Config, db db.App) App {
 }
 
 // Start the package
-func (a app) Start() {
+func (a App) Start() {
 	logger.Fatal(a.handleFile(a.file))
 }
 
-func (a app) handleFile(filename string) error {
+func (a App) handleFile(filename string) error {
 	if len(filename) == 0 {
 		return errors.New("no filename provided")
 	}
@@ -76,7 +72,7 @@ func (a app) handleFile(filename string) error {
 	return a.handleLines(bufio.NewScanner(file))
 }
 
-func (a app) handleLines(scanner *bufio.Scanner) error {
+func (a App) handleLines(scanner *bufio.Scanner) error {
 	lastInsert, err := a.getLastFetch(context.Background())
 	if err != nil {
 		return fmt.Errorf("unable to get last fetch: %s", err)
