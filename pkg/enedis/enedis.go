@@ -34,8 +34,8 @@ type Config struct {
 // Flags adds flags for configuring package
 func Flags(fs *flag.FlagSet, prefix string) Config {
 	return Config{
-		file: flags.New(prefix, "enedis").Name("File").Default("").Label("CSV export to load").ToString(fs),
-		name: flags.New(prefix, "enedis").Name("Name").Default("home").Label("Name").ToString(fs),
+		file: flags.New(prefix, "enedis", "File").Default("", nil).Label("CSV export to load").ToString(fs),
+		name: flags.New(prefix, "enedis", "Name").Default("home", nil).Label("Name").ToString(fs),
 	}
 }
 
