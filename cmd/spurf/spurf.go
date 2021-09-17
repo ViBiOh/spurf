@@ -23,11 +23,7 @@ func main() {
 
 	spurfDb, err := db.New(dbConfig)
 	logger.Fatal(err)
-	defer func() {
-		if err := spurfDb.Close(); err != nil {
-			logger.Error("error while closing database connection: %s", err)
-		}
-	}()
+	defer spurfDb.Close()
 
 	enedis.New(enedisConfig, spurfDb).Start()
 }

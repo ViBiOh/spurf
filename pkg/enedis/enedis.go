@@ -3,7 +3,6 @@ package enedis
 import (
 	"bufio"
 	"context"
-	"database/sql"
 	"errors"
 	"flag"
 	"fmt"
@@ -80,20 +79,24 @@ func (a App) handleLines(scanner *bufio.Scanner) error {
 
 	count := 0
 
-	feedLine := func(stmt *sql.Stmt) error {
+	feedLine := func() ([]interface{}, error) {
 		if !scanner.Scan() {
-			return db.ErrBulkEnded
+			return nil, nil
 		}
 
+	forward:
 		value := handleLine(lastInsert, strings.TrimSpace(scanner.Text()))
 		if value == emptyValue {
-			return nil
+			if scanner.Scan() {
+				goto forward
+			}
+
+			return nil, nil
 		}
 
 		count++
 
-		_, err := stmt.Exec(a.name, value.Timestamp, value.Valeur)
-		return err
+		return []interface{}{a.name, value.Timestamp, value.Valeur}, err
 	}
 
 	if err := a.save(context.Background(), feedLine); err != nil {
