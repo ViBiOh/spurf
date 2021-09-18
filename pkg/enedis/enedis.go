@@ -96,7 +96,7 @@ func (a App) handleLines(scanner *bufio.Scanner) error {
 
 		count++
 
-		return []interface{}{a.name, value.Timestamp, value.Valeur}, err
+		return []interface{}{a.name, value.Timestamp, value.Valeur}, nil
 	}
 
 	if err := a.save(context.Background(), feedLine); err != nil {
@@ -138,6 +138,6 @@ func handleLine(lastInsert time.Time, line string) value {
 
 	return value{
 		Valeur:    valeur / 1000,
-		Timestamp: parts[0],
+		Timestamp: timestamp,
 	}
 }
