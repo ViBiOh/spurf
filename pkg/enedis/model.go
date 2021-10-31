@@ -2,9 +2,7 @@ package enedis
 
 import "time"
 
-var (
-	emptyValue = value{}
-)
+var emptyValue = value{}
 
 type value struct {
 	Timestamp time.Time
