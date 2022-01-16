@@ -3,7 +3,8 @@ module github.com/ViBiOh/spurf/v2
 go 1.17
 
 require (
-	github.com/ViBiOh/httputils/v4 v4.34.3
+	github.com/ViBiOh/flags v0.0.1
+	github.com/ViBiOh/httputils/v4 v4.34.4
 	github.com/jackc/pgx/v4 v4.14.1
 )
 
