@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/ViBiOh/flags v0.0.1
-	github.com/ViBiOh/httputils/v4 v4.34.7
+	github.com/ViBiOh/httputils/v4 v4.34.8
 	github.com/jackc/pgx/v4 v4.14.1
 )
 
