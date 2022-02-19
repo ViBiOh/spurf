@@ -41,4 +41,8 @@ Usage of spurf:
         [logger] Key for message in JSON {SPURF_LOGGER_MESSAGE_KEY} (default "message")
   -loggerTimeKey string
         [logger] Key for timestamp in JSON {SPURF_LOGGER_TIME_KEY} (default "time")
+  -tracerRate string
+        [tracer] Jaeger sample rate, 'always', 'never' or a float value {SPURF_TRACER_RATE} (default "always")
+  -tracerURL string
+        [tracer] Jaeger endpoint URL (e.g. http://jaeger:14268/api/traces) {SPURF_TRACER_URL}
 ```
