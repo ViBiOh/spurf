@@ -79,7 +79,7 @@ func (a App) handleLines(scanner *bufio.Scanner) error {
 
 	count := 0
 
-	feedLine := func() ([]interface{}, error) {
+	feedLine := func() ([]any, error) {
 		if !scanner.Scan() {
 			return nil, nil
 		}
@@ -96,7 +96,7 @@ func (a App) handleLines(scanner *bufio.Scanner) error {
 
 		count++
 
-		return []interface{}{a.name, value.Timestamp, value.Valeur}, nil
+		return []any{a.name, value.Timestamp, value.Valeur}, nil
 	}
 
 	if err := a.save(context.Background(), feedLine); err != nil {
