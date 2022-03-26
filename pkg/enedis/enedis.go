@@ -33,8 +33,8 @@ type Config struct {
 // Flags adds flags for configuring package
 func Flags(fs *flag.FlagSet, prefix string) Config {
 	return Config{
-		file: flags.New(prefix, "enedis", "File").Default("", nil).Label("CSV export to load").ToString(fs),
-		name: flags.New(prefix, "enedis", "Name").Default("home", nil).Label("Name").ToString(fs),
+		file: flags.String(fs, prefix, "enedis", "File", "CSV export to load", "", nil),
+		name: flags.String(fs, prefix, "enedis", "Name", "Name", "home", nil),
 	}
 }
 
