@@ -28,7 +28,7 @@ func main() {
 	logger.Fatal(err)
 	defer tracerApp.Close()
 
-	spurfDb, err := db.New(dbConfig, tracerApp)
+	spurfDb, err := db.New(dbConfig, tracerApp.GetTracer("database"))
 	logger.Fatal(err)
 	defer spurfDb.Close()
 
