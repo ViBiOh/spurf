@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/ViBiOh/flags v1.1.0
-	github.com/ViBiOh/httputils/v4 v4.44.0
+	github.com/ViBiOh/httputils/v4 v4.45.0
 	github.com/jackc/pgx/v4 v4.16.1
 )
 
@@ -26,8 +26,8 @@ require (
 	go.opentelemetry.io/otel/metric v0.31.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.8.0 // indirect
 	go.opentelemetry.io/otel/trace v1.8.0 // indirect
-	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
-	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
-	golang.org/x/term v0.0.0-20220526004731-065cf7ba2467 // indirect
+	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
+	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
+	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect
 	golang.org/x/text v0.3.7 // indirect
 )
