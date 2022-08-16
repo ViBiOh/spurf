@@ -59,7 +59,7 @@ func (a App) handleFile(filename string) error {
 
 	file, err := os.Open(filename)
 	if err != nil {
-		return fmt.Errorf("open file: %s", err)
+		return fmt.Errorf("open file: %w", err)
 	}
 
 	defer func() {
@@ -74,7 +74,7 @@ func (a App) handleFile(filename string) error {
 func (a App) handleLines(scanner *bufio.Scanner) error {
 	lastInsert, err := a.getLastFetch(context.Background())
 	if err != nil {
-		return fmt.Errorf("get last fetch: %s", err)
+		return fmt.Errorf("get last fetch: %w", err)
 	}
 
 	count := 0
@@ -100,11 +100,11 @@ func (a App) handleLines(scanner *bufio.Scanner) error {
 	}
 
 	if err := a.save(context.Background(), feedLine); err != nil {
-		return fmt.Errorf("save datas: %s", err)
+		return fmt.Errorf("save datas: %w", err)
 	}
 
 	if err := scanner.Err(); err != nil {
-		return fmt.Errorf("error while reading line-by-line: %s", err)
+		return fmt.Errorf("error while reading line-by-line: %w", err)
 	}
 
 	logger.Info("%d lines inserted", count)
