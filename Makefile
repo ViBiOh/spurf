@@ -84,3 +84,8 @@ build:
 .PHONY: run
 run:
 	$(MAIN_RUNNER)
+
+## config: Create local configuration
+.PHONY: config
+config:
+	cp .env.example .env
