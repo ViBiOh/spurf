@@ -95,6 +95,7 @@ func (a App) handleLines(scanner *bufio.Scanner) error {
 		}
 
 		count++
+		lastInsert = value.Timestamp
 
 		return []any{a.name, value.Timestamp, value.Valeur}, nil
 	}
@@ -125,7 +126,7 @@ func handleLine(lastInsert time.Time, line string) value {
 		return emptyValue
 	}
 
-	if timestamp.Before(lastInsert) || timestamp.Equal(lastInsert) {
+	if !timestamp.After(lastInsert) {
 		logger.Warn("ignoring line `%s`: timestamp already inserted", line)
 		return emptyValue
 	}
