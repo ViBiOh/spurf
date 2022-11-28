@@ -2,8 +2,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY/8hQs=
 github.com/ViBiOh/flags v1.2.0 h1:DaujjNXzD29KxKyp4eZdn7c9+uBN5DokWgDAe7DcUmc=
 github.com/ViBiOh/flags v1.2.0/go.mod h1:UyMB5zeD/aId7Xw3x7577ZNU298JmukzOcV8p/H2W1s=
-github.com/ViBiOh/httputils/v4 v4.50.3 h1:KCAthMtt5XNM/ZCaPfjDljn2a+bUKesDJSJ0bEwKJ0I=
-github.com/ViBiOh/httputils/v4 v4.50.3/go.mod h1:DB7a/VyQRn6SohUMbB87j2pUg6hfatM4+/cgTncnoVE=
+github.com/ViBiOh/httputils/v4 v4.50.4 h1:hrwFSAyB7c8Sufdre5SyXpcBxMM7anBYeruhVomjjXk=
+github.com/ViBiOh/httputils/v4 v4.50.4/go.mod h1:DB7a/VyQRn6SohUMbB87j2pUg6hfatM4+/cgTncnoVE=
 github.com/cockroachdb/apd v1.1.0 h1:3LFP3629v+1aKXU5Q37mxmRxX/pIu1nijXydLShEq5I=
 github.com/cockroachdb/apd v1.1.0/go.mod h1:8Sl8LxpKi29FqWXR16WEFZRNSz3SoPzUzeMeY4+DwBQ=
 github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e/go.mod h1:F5haX7vjVVG0kc13fIWeqUViNPyEJxv/OmvnBo0Yme4=
