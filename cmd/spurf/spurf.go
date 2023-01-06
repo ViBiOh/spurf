@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
 
@@ -24,11 +25,13 @@ func main() {
 	logger.Global(logger.New(loggerConfig))
 	defer logger.Close()
 
-	tracerApp, err := tracer.New(tracerConfig)
-	logger.Fatal(err)
-	defer tracerApp.Close()
+	ctx := context.Background()
 
-	spurfDb, err := db.New(dbConfig, tracerApp.GetTracer("database"))
+	tracerApp, err := tracer.New(ctx, tracerConfig)
+	logger.Fatal(err)
+	defer tracerApp.Close(ctx)
+
+	spurfDb, err := db.New(ctx, dbConfig, tracerApp.GetTracer("database"))
 	logger.Fatal(err)
 	defer spurfDb.Close()
 
