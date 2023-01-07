@@ -35,5 +35,5 @@ func main() {
 	logger.Fatal(err)
 	defer spurfDb.Close()
 
-	enedis.New(enedisConfig, spurfDb).Start()
+	enedis.New(enedisConfig, spurfDb).Start(ctx)
 }

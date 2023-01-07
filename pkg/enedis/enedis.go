@@ -16,7 +16,6 @@ import (
 	"github.com/ViBiOh/httputils/v4/pkg/logger"
 )
 
-// App of package
 type App struct {
 	db db.App
 
@@ -24,13 +23,11 @@ type App struct {
 	name string
 }
 
-// Config of package
 type Config struct {
 	file *string
 	name *string
 }
 
-// Flags adds flags for configuring package
 func Flags(fs *flag.FlagSet, prefix string) Config {
 	return Config{
 		file: flags.String(fs, prefix, "enedis", "File", "CSV export to load", "", nil),
@@ -38,7 +35,6 @@ func Flags(fs *flag.FlagSet, prefix string) Config {
 	}
 }
 
-// New creates new App from Config
 func New(config Config, db db.App) App {
 	return App{
 		file: strings.TrimSpace(*config.file),
@@ -47,12 +43,11 @@ func New(config Config, db db.App) App {
 	}
 }
 
-// Start the package
-func (a App) Start() {
-	logger.Fatal(a.handleFile(a.file))
+func (a App) Start(ctx context.Context) {
+	logger.Fatal(a.handleFile(ctx, a.file))
 }
 
-func (a App) handleFile(filename string) error {
+func (a App) handleFile(ctx context.Context, filename string) error {
 	if len(filename) == 0 {
 		return errors.New("no filename provided")
 	}
@@ -68,11 +63,11 @@ func (a App) handleFile(filename string) error {
 		}
 	}()
 
-	return a.handleLines(bufio.NewScanner(file))
+	return a.handleLines(ctx, bufio.NewScanner(file))
 }
 
-func (a App) handleLines(scanner *bufio.Scanner) error {
-	lastInsert, err := a.getLastFetch(context.Background())
+func (a App) handleLines(ctx context.Context, scanner *bufio.Scanner) error {
+	lastInsert, err := a.getLastFetch(ctx)
 	if err != nil {
 		return fmt.Errorf("get last fetch: %w", err)
 	}
@@ -100,7 +95,7 @@ func (a App) handleLines(scanner *bufio.Scanner) error {
 		return []any{a.name, value.Timestamp, value.Valeur}, nil
 	}
 
-	if err := a.save(context.Background(), feedLine); err != nil {
+	if err := a.save(ctx, feedLine); err != nil {
 		return fmt.Errorf("save datas: %w", err)
 	}
 
