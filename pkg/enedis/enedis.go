@@ -30,8 +30,8 @@ type Config struct {
 
 func Flags(fs *flag.FlagSet, prefix string) Config {
 	return Config{
-		file: flags.String(fs, prefix, "enedis", "File", "CSV export to load", "", nil),
-		name: flags.String(fs, prefix, "enedis", "Name", "Name", "home", nil),
+		file: flags.New("File", "CSV export to load").Prefix(prefix).DocPrefix("enedis").String(fs, "", nil),
+		name: flags.New("Name", "Name").Prefix(prefix).DocPrefix("enedis").String(fs, "home", nil),
 	}
 }
 
